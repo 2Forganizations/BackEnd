@@ -13,7 +13,7 @@ public class PlanImage {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "planimage_id")
+    @Column(name = "plan_image_id")
     private Long id;
 
     private String filePath;

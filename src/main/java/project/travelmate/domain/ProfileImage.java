@@ -13,7 +13,7 @@ public class ProfileImage {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "profileimage_id")
+    @Column(name = "profile_image_id")
     private Long id;
 
     private String filePath;

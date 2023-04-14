@@ -14,7 +14,7 @@ public class PlanMember {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "planmember_id")
+    @Column(name = "plan_member_id")
     private Long id;
 
     @Enumerated(value = EnumType.STRING)

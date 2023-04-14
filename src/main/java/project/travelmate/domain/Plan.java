@@ -38,7 +38,7 @@ public class Plan extends TimeEntity {
     private Integer currentRecruitMember;
 
     @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    @JoinColumn(name ="planimage_id")
+    @JoinColumn(name ="plan_image_id")
     private PlanImage PlanImage;
 
     @OneToMany(mappedBy = "plan")

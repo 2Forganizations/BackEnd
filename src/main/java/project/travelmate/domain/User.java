@@ -29,7 +29,7 @@ public class User extends TimeEntity {
     private String intro;
 
     @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    @JoinColumn(name ="profileimage_id")
+    @JoinColumn(name ="profile_image_id")
     private ProfileImage profileImage;
 
 }

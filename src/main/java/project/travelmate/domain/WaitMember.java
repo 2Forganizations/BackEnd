@@ -14,7 +14,7 @@ public class WaitMember extends CreatedEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "waitmember_id")
+    @Column(name = "wait_member_id")
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
