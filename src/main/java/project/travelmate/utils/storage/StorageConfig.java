@@ -10,7 +10,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
-public class S3Config {
+public class StorageConfig {
     @Value("${cloud.aws.credentials.accessKey}")
     private String accessKey;
 
@@ -30,6 +30,11 @@ public class S3Config {
                 .withRegion(region)
                 .withCredentials(new AWSStaticCredentialsProvider(credentials))
                 .build();
+    }
+
+    @Bean
+    public FileSystem fileSystem() {
+        return new S3Util(amazonS3());
     }
 
 }

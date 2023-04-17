@@ -2,12 +2,21 @@ package project.travelmate.advice.exception;
 
 import project.travelmate.advice.ExceptionCodeConst;
 
-public class CheckedWrapperException extends CustomException {
+public class CheckedWrapperException extends RuntimeException {
+
+    private String code;
+    private Exception e;
+
     public CheckedWrapperException(ExceptionCodeConst codeConst, Exception e) {
-        super(codeConst, e);
+        super(codeConst.getMessage());
+        this.code = codeConst.getCode();
+        this.e = e;
     }
 
-    public CheckedWrapperException(ExceptionCodeConst codeConst) {
-        super(codeConst);
+    @Override
+    public void printStackTrace() {
+        e.printStackTrace();
     }
+
 }
+

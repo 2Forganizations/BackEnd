@@ -21,7 +21,7 @@ import static project.travelmate.advice.ExceptionCodeConst.*;
 
 @RequiredArgsConstructor
 @Service
-public class S3Util implements StorageUtil{
+public class S3Util implements FileSystem {
     public static final String IMAGE_JPEG_TYPE = "image/jpeg";
     public static final String IMAGE_PNG_TYPE = "image/png";
 
