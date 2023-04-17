@@ -38,3 +38,4 @@ out/
 
 ### yml ###
 **.yml
+/src/main/java/project/travelmate/test/TestController.java
