@@ -1,6 +1,7 @@
 package project.travelmate.advice.exception;
 
 import lombok.Getter;
+import project.travelmate.advice.ExceptionCodeConst;
 
 @Getter
 public class CustomException extends RuntimeException {
@@ -8,11 +9,17 @@ public class CustomException extends RuntimeException {
     private String code;
     private Exception e;
 
-    public CustomException(String message, String code, Exception e) {
-        super(message);
-        this.code = code;
+    public CustomException(ExceptionCodeConst codeConst, Exception e) {
+        super(codeConst.getMessage());
+        this.code = codeConst.getCode();
         this.e = e;
     }
+
+    public CustomException(ExceptionCodeConst codeConst) {
+        super(codeConst.getMessage());
+        this.code = codeConst.getCode();
+    }
+
 
     @Override
     public void printStackTrace() {

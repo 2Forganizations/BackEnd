@@ -1,7 +1,15 @@
 package project.travelmate.utils.storage;
 
-public interface StorageUtil {
-    public String saveImage();
+import org.springframework.context.annotation.Bean;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
-    public void deleteImage();
+
+@Transactional
+@Service
+public interface StorageUtil {
+    public String saveImage(MultipartFile imageFile);
+
+    public void deleteImage(String imageUrl);
 }
