@@ -39,7 +39,7 @@ public class S3Util implements StorageUtil{
 
     @Override
     public void deleteImage(String imageUrl) {
-        return;
+        amazonS3.deleteObject(bucket, imageUrl);
     }
 
     private void validation(MultipartFile imageFile) {
