@@ -45,7 +45,7 @@ public class S3Util implements FileSystem {
     }
 
     private void validation(MultipartFile imageFile) {
-        if (imageFile.isEmpty()) {
+        if (imageFile == null || imageFile.isEmpty()) {
             throw new EmptyFileException(EMPTY_FILE_CODE);
         }
         if (isNotImageContentType(imageFile.getContentType())) {
@@ -65,7 +65,6 @@ public class S3Util implements FileSystem {
 
         PutObjectRequest putRequest = new PutObjectRequest(bucket, fileName, imageStream, metadata);
         amazonS3.putObject(putRequest.withCannedAcl(CannedAccessControlList.PublicRead));
-
         return amazonS3.getUrl(bucket, fileName).toString();
     }
 
