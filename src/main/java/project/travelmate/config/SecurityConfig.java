@@ -5,7 +5,7 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
 
 @EnableWebSecurity
-public class SpringSecurityConfig {
+public class SecurityConfig {
 
     @Bean
     public WebSecurityCustomizer configure() {
@@ -13,5 +13,5 @@ public class SpringSecurityConfig {
                 "/**"
         );
     }
-
+    
 }
