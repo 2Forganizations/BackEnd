@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.reactive.function.BodyInserters;
@@ -38,6 +39,7 @@ public class KakaoRequestService implements RequestService {
     private String TOKEN_URI;
 
     @Override
+    @Transactional
     public SignInResponse redirect(TokenRequest tokenRequest) {
         TokenResponse tokenResponse = getToken(tokenRequest);
         KakaoUserInfo kakaoUserInfo = getUserInfo(tokenResponse.getAccessToken());
@@ -51,14 +53,15 @@ public class KakaoRequestService implements RequestService {
                     tokenResponse.getRefreshToken());
 
             return new SignInResponse(AuthProvider.KAKAO, null, accessToken, refreshToken);
-        } else {
-            User user = User.builder()
-                    .email(kakaoUserInfo.getEmail())
-                    .name(kakaoUserInfo.getName())
-                    .build();
-            userRepository.save(user);
-            return new SignInResponse(AuthProvider.KAKAO, kakaoUserInfo);
         }
+        User user = User.builder()
+                .id(kakaoUserInfo.getId())
+                .email(kakaoUserInfo.getEmail())
+                .name(kakaoUserInfo.getName())
+                .build();
+        userRepository.save(user);
+
+        return new SignInResponse(AuthProvider.KAKAO, kakaoUserInfo);
     }
 
     @Override
