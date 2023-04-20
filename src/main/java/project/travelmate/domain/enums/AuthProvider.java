@@ -8,10 +8,6 @@ public enum AuthProvider {
 
     private String authProvider;
 
-    public String getAuthProvider() {
-        return authProvider;
-    }
-
     AuthProvider(String authProvider) {
         this.authProvider = authProvider;
     }
@@ -21,6 +17,10 @@ public enum AuthProvider {
                 .filter(provider -> provider.getAuthProvider().equals(code))
                 .findFirst()
                 .orElse(EMPTY);
+    }
+
+    public String getAuthProvider() {
+        return authProvider;
     }
 
 }
