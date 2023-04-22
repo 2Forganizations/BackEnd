@@ -17,10 +17,4 @@ public class TokenRequest {
         this.code = code;
     }
 
-    public TokenRequest(String registrationId, String code, String refreshToken) {
-        this.registrationId = registrationId;
-        this.code = code;
-        this.refreshToken = refreshToken;
-    }
-
 }
