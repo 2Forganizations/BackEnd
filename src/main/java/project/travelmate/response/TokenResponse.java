@@ -8,21 +8,20 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class TokenResponse {
 
-    private String tokenType;
-    private String accessToken;
-    private Integer expiresIn;
-    private String refreshToken;
-    private Integer refreshTokenExpiresIn;
-    private String error;
-    private String errorDescription;
+    private String access_token;
+    private String token_type;
+    private String refresh_token;
+    private int expires_in;
+    private String scope;
+    private int refresh_token_expires_in;
 
-    public TokenResponse(String tokenType, String accessToken, Integer expiresIn, String refreshToken, Integer refreshTokenExpiresIn, String error, String errorDescription) {
-        this.tokenType = tokenType;
-        this.accessToken = accessToken;
-        this.expiresIn = expiresIn;
-        this.refreshToken = refreshToken;
-        this.refreshTokenExpiresIn = refreshTokenExpiresIn;
-        this.error = error;
-        this.errorDescription = errorDescription;
+    public TokenResponse(String access_token, String token_type, String refresh_token, int expires_in, String scope, int refresh_token_expires_in) {
+        this.access_token = access_token;
+        this.token_type = token_type;
+        this.refresh_token = refresh_token;
+        this.expires_in = expires_in;
+        this.scope = scope;
+        this.refresh_token_expires_in = refresh_token_expires_in;
     }
+
 }
