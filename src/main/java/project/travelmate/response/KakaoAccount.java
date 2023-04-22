@@ -1,2 +1,11 @@
-package project.travelmate.response;public class KakaoAccount {
+package project.travelmate.response;
+
+import lombok.Getter;
+
+@Getter
+public class KakaoAccount {
+
+    private String email;
+    private Profile profile;
+
 }
