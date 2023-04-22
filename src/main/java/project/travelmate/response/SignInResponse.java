@@ -14,11 +14,6 @@ public class SignInResponse {
     private String accessToken;
     private String refreshToken;
 
-    public SignInResponse(AuthProvider authProvider, KakaoUserInfo kakaoUserInfo) {
-        this.authProvider = authProvider;
-        this.kakaoUserInfo = kakaoUserInfo;
-    }
-
     public SignInResponse(AuthProvider authProvider, KakaoUserInfo kakaoUserInfo, String accessToken, String refreshToken) {
         this.authProvider = authProvider;
         this.kakaoUserInfo = kakaoUserInfo;
