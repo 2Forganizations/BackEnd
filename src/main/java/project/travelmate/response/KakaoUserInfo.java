@@ -11,15 +11,4 @@ public class KakaoUserInfo {
     private String id;
     private KakaoAccount kakaoAccount;
 
-    @Getter
-    private static class KakaoAccount {
-        private String email;
-        private Profile profile;
-
-        @Getter
-        private static class Profile {
-            private String nickname;
-        }
-    }
-
 }
