@@ -1,6 +1,5 @@
 package project.travelmate.service;
 
-import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import project.travelmate.advice.exception.OauthNotSupportException;
 import project.travelmate.advice.exception.UserNotFoundException;
@@ -16,12 +15,17 @@ import static project.travelmate.domain.enums.AuthProvider.KAKAO;
 import static project.travelmate.domain.enums.AuthProvider.findByCode;
 
 @Service
-@RequiredArgsConstructor
 public class AuthService {
 
-    private final KakaoRequestService kakaoRequestService;
-    private final UserRepository userRepository;
-    private final SecurityUtil securityUtil;
+    private KakaoRequestService kakaoRequestService;
+    private UserRepository userRepository;
+    private SecurityUtil securityUtil;
+
+    public AuthService(KakaoRequestService kakaoRequestService, UserRepository userRepository, SecurityUtil securityUtil) {
+        this.kakaoRequestService = kakaoRequestService;
+        this.userRepository = userRepository;
+        this.securityUtil = securityUtil;
+    }
 
     public SignInResponse redirect(TokenRequest tokenRequest) {
         if (KAKAO.getAuthProvider().equals(tokenRequest.getRegistrationId())) {
@@ -41,7 +45,7 @@ public class AuthService {
         if (KAKAO.getAuthProvider().equals(provider.toLowerCase())) {
             tokenResponse = kakaoRequestService.getRefreshToken(provider, oldRefreshToken);
         }
-        String accessToken = securityUtil.createAccessToken(userId, findByCode(provider.toLowerCase()), tokenResponse.getAccessToken());
+        String accessToken = securityUtil.createAccessToken(userId, findByCode(provider.toLowerCase()), tokenResponse.getAccess_token());
         SignInResponse signInResponse = new SignInResponse(findByCode(provider.toLowerCase()), null, accessToken, null);
 
         return signInResponse;
