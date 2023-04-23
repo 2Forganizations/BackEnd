@@ -1,7 +1,6 @@
 package project.travelmate.filter;
 
 import com.nimbusds.jose.shaded.json.JSONObject;
-import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
@@ -21,11 +20,15 @@ import static project.travelmate.advice.ExceptionCodeConst.USER_NOT_FOUND_CODE;
 import static project.travelmate.domain.enums.AuthProvider.findByCode;
 
 @Component
-@RequiredArgsConstructor
 public class SecurityFilter extends OncePerRequestFilter {
 
     private final SecurityUtil securityUtil;
     private final UserRepository userRepository;
+
+    public SecurityFilter(SecurityUtil securityUtil, UserRepository userRepository) {
+        this.securityUtil = securityUtil;
+        this.userRepository = userRepository;
+    }
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) {
