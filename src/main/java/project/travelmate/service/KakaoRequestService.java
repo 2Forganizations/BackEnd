@@ -1,7 +1,7 @@
 package project.travelmate.service;
 
-import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -18,8 +18,11 @@ import project.travelmate.response.SignInResponse;
 import project.travelmate.response.TokenResponse;
 import project.travelmate.util.SecurityUtil;
 
+import java.util.Optional;
+
+import static java.lang.String.valueOf;
+
 @Service
-@RequiredArgsConstructor
 public class KakaoRequestService implements RequestService {
 
     private final UserRepository userRepository;
@@ -38,30 +41,37 @@ public class KakaoRequestService implements RequestService {
     @Value("${spring.security.oauth2.client.provider.kakao.token_uri}")
     private String TOKEN_URI;
 
+    public KakaoRequestService(UserRepository userRepository, SecurityUtil securityUtil, WebClient webClient) {
+        this.userRepository = userRepository;
+        this.securityUtil = securityUtil;
+        this.webClient = webClient;
+    }
+
     @Override
     @Transactional
     public SignInResponse redirect(TokenRequest tokenRequest) {
         TokenResponse tokenResponse = getToken(tokenRequest);
-        KakaoUserInfo kakaoUserInfo = getUserInfo(tokenResponse.getAccessToken());
+        KakaoUserInfo kakaoUserInfo = getUserInfo(tokenResponse.getAccess_token());
 
-        if (userRepository.existsById(String.valueOf(kakaoUserInfo.getId()))) {
-            String accessToken = securityUtil.createAccessToken(kakaoUserInfo.getId(),
-                    AuthProvider.KAKAO,
-                    tokenResponse.getAccessToken());
-            String refreshToken = securityUtil.createRefreshToken(kakaoUserInfo.getId(),
-                    AuthProvider.KAKAO,
-                    tokenResponse.getRefreshToken());
-
-            return new SignInResponse(AuthProvider.KAKAO, null, accessToken, refreshToken);
+        Optional<User> findUser = userRepository.findById(valueOf(kakaoUserInfo.getId()));
+        if (findUser.isEmpty()) {
+            User user = User.builder()
+                    .id(kakaoUserInfo.getId())
+                    .email(kakaoUserInfo.getKakaoAccount().getEmail())
+                    .name(kakaoUserInfo.getKakaoAccount().getProfile().getNickname())
+                    .authProvider(AuthProvider.KAKAO)
+                    .build();
+            userRepository.save(user);
         }
-        User user = User.builder()
-                .id(kakaoUserInfo.getId())
-                .email(kakaoUserInfo.getEmail())
-                .name(kakaoUserInfo.getName())
-                .build();
-        userRepository.save(user);
+        
+        String accessToken = securityUtil.createAccessToken(kakaoUserInfo.getId(),
+                AuthProvider.KAKAO,
+                tokenResponse.getAccess_token());
+        String refreshToken = securityUtil.createRefreshToken(kakaoUserInfo.getId(),
+                AuthProvider.KAKAO,
+                tokenResponse.getRefresh_token());
 
-        return new SignInResponse(AuthProvider.KAKAO, kakaoUserInfo);
+        return new SignInResponse(AuthProvider.KAKAO, kakaoUserInfo, accessToken, refreshToken);
     }
 
     @Override
@@ -74,12 +84,16 @@ public class KakaoRequestService implements RequestService {
 
         return webClient
                 .mutate()
-                .baseUrl(TOKEN_URI)
+                .baseUrl("https://kauth.kakao.com")
                 .build()
-                .post().
-                contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                .post()
+                .uri("/oauth/token")
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                 .body(BodyInserters.fromFormData(formData))
                 .retrieve()
+                .onStatus(
+                        HttpStatus.UNAUTHORIZED::equals,
+                        response -> response.bodyToMono(String.class).map(Exception::new))
                 .bodyToMono(TokenResponse.class)
                 .block();
     }
@@ -94,6 +108,9 @@ public class KakaoRequestService implements RequestService {
                 .uri("/v2/user/me")
                 .headers(h -> h.setBearerAuth(accessToken))
                 .retrieve()
+                .onStatus(
+                        HttpStatus.UNAUTHORIZED::equals,
+                        response -> response.bodyToMono(String.class).map(Exception::new))
                 .bodyToMono(KakaoUserInfo.class)
                 .block();
     }
