@@ -11,6 +11,7 @@ import org.springframework.web.reactive.function.BodyInserters;
 import org.springframework.web.reactive.function.client.WebClient;
 import project.travelmate.domain.User;
 import project.travelmate.domain.enums.AuthProvider;
+import project.travelmate.domain.enums.Gender;
 import project.travelmate.repository.UserRepository;
 import project.travelmate.request.TokenRequest;
 import project.travelmate.response.KakaoUserInfo;
@@ -53,23 +54,26 @@ public class KakaoRequestService implements RequestService {
         TokenResponse tokenResponse = getToken(tokenRequest);
         KakaoUserInfo kakaoUserInfo = getUserInfo(tokenResponse.getAccess_token());
 
-        Optional<User> findUser = userRepository.findById(valueOf(kakaoUserInfo.getId()));
-        if (findUser.isEmpty()) {
-            User user = User.builder()
-                    .id(kakaoUserInfo.getId())
-                    .email(kakaoUserInfo.getKakaoAccount().getEmail())
-                    .name(kakaoUserInfo.getKakaoAccount().getProfile().getNickname())
-                    .authProvider(AuthProvider.KAKAO)
-                    .build();
-            userRepository.save(user);
-        }
-        
         String accessToken = securityUtil.createAccessToken(kakaoUserInfo.getId(),
                 AuthProvider.KAKAO,
                 tokenResponse.getAccess_token());
         String refreshToken = securityUtil.createRefreshToken(kakaoUserInfo.getId(),
                 AuthProvider.KAKAO,
                 tokenResponse.getRefresh_token());
+
+        Optional<User> findUser = userRepository.findById(valueOf(kakaoUserInfo.getId()));
+        if (findUser.isEmpty()) {
+            User user = User.builder()
+                    .id(kakaoUserInfo.getId())
+                    .email(kakaoUserInfo.getKakaoAccount().getEmail())
+                    .name(kakaoUserInfo.getKakaoAccount().getProfile().getNickname())
+                    .gender(Gender.MALE)
+                    .authProvider(AuthProvider.KAKAO)
+                    .refreshToken(refreshToken)
+                    .build();
+            userRepository.save(user);
+        }
+
 
         return new SignInResponse(AuthProvider.KAKAO, kakaoUserInfo, accessToken, refreshToken);
     }
