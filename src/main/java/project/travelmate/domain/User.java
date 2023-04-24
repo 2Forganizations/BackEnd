@@ -31,6 +31,7 @@ public class User extends TimeEntity {
     @Enumerated(EnumType.STRING)
     private AuthProvider authProvider;
 
+    @Column(length = 500)
     private String refreshToken;
 
     @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
