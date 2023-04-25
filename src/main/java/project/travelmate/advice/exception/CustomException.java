@@ -6,7 +6,7 @@ import project.travelmate.advice.ExceptionCodeConst;
 @Getter
 public class CustomException extends RuntimeException {
 
-    private final String code;
+    private String code;
 
     public CustomException(ExceptionCodeConst codeConst) {
         super(codeConst.getMessage());
