@@ -1,5 +1,5 @@
 ---
-name: "ISSUE : \U0001F198Feature"
+name: 'ISSUE : Feature'
 about: ISSUE를 작성해주세요.
 title: ''
 labels: ''
