@@ -10,8 +10,10 @@ import org.springframework.util.MultiValueMap;
 import org.springframework.web.reactive.function.BodyInserters;
 import org.springframework.web.reactive.function.client.WebClient;
 import project.travelmate.domain.User;
+import project.travelmate.domain.RefreshToken;
 import project.travelmate.domain.enums.AuthProvider;
 import project.travelmate.domain.enums.Gender;
+import project.travelmate.repository.RefreshTokenRepository;
 import project.travelmate.repository.UserRepository;
 import project.travelmate.request.TokenRequest;
 import project.travelmate.response.KakaoUserInfo;
@@ -27,6 +29,7 @@ import static java.lang.String.valueOf;
 public class KakaoRequestService implements RequestService {
 
     private final UserRepository userRepository;
+    private final RefreshTokenRepository refreshTokenRepository;
     private final SecurityUtil securityUtil;
     private final WebClient webClient;
 
@@ -42,8 +45,9 @@ public class KakaoRequestService implements RequestService {
     @Value("${spring.security.oauth2.client.provider.kakao.token_uri}")
     private String TOKEN_URI;
 
-    public KakaoRequestService(UserRepository userRepository, SecurityUtil securityUtil, WebClient webClient) {
+    public KakaoRequestService(UserRepository userRepository, RefreshTokenRepository refreshTokenRepository, SecurityUtil securityUtil, WebClient webClient) {
         this.userRepository = userRepository;
+        this.refreshTokenRepository = refreshTokenRepository;
         this.securityUtil = securityUtil;
         this.webClient = webClient;
     }
@@ -69,11 +73,12 @@ public class KakaoRequestService implements RequestService {
                     .name(kakaoUserInfo.getKakaoAccount().getProfile().getNickname())
                     .gender(Gender.MALE)
                     .authProvider(AuthProvider.KAKAO)
-                    .refreshToken(refreshToken)
                     .build();
             userRepository.save(user);
-        }
 
+            RefreshToken token = RefreshToken.builder().refreshToken(refreshToken).build();
+            refreshTokenRepository.save(token);
+        }
 
         return new SignInResponse(AuthProvider.KAKAO, kakaoUserInfo, accessToken, refreshToken);
     }
