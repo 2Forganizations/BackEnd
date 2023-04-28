@@ -76,7 +76,10 @@ public class KakaoRequestService implements RequestService {
                     .build();
             userRepository.save(user);
 
-            RefreshToken token = RefreshToken.builder().refreshToken(refreshToken).build();
+            RefreshToken token = RefreshToken.builder()
+                    .refreshToken(refreshToken)
+                    .user(user)
+                    .build();
             refreshTokenRepository.save(token);
         }
 
