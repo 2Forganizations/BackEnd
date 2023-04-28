@@ -8,7 +8,6 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 import project.travelmate.advice.exception.ExpiredTokenException;
-import project.travelmate.repository.UserRepository;
 import project.travelmate.request.AuthInfo;
 import project.travelmate.util.SecurityUtil;
 
@@ -27,11 +26,9 @@ import static project.travelmate.advice.ExceptionCodeConst.EXPIRED_ACCESS_TOKEN_
 public class SecurityFilter extends OncePerRequestFilter {
 
     private final SecurityUtil securityUtil;
-    private final UserRepository userRepository;
 
-    public SecurityFilter(SecurityUtil securityUtil, UserRepository userRepository) {
+    public SecurityFilter(SecurityUtil securityUtil) {
         this.securityUtil = securityUtil;
-        this.userRepository = userRepository;
     }
 
     @Override
@@ -46,10 +43,10 @@ public class SecurityFilter extends OncePerRequestFilter {
                 if (securityUtil.isExpiration(token)) {
                     throw new ExpiredTokenException(EXPIRED_ACCESS_TOKEN_CODE);
                 }
-                String memberId = (String) securityUtil.get(token).get("id");
+                String id = (String) securityUtil.get(token).get("id");
                 String provider = (String) securityUtil.get(token).get("provider");
 
-                AuthInfo authInfo = new AuthInfo(memberId, provider, token);
+                AuthInfo authInfo = new AuthInfo(id, provider, token);
                 SecurityContextHolder.getContext().setAuthentication(new UsernamePasswordAuthenticationToken(authInfo, null, null));
             }
 
