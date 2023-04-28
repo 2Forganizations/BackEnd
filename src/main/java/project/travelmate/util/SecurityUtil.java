@@ -17,17 +17,17 @@ public class SecurityUtil {
     @Value("jwt.auth.token-secret")
     private String secret;
 
-    public String createAccessToken(String userId, AuthProvider provider, String accessToken) {
+    public String createAccessToken(String memberId, AuthProvider provider, String accessToken) {
         HashMap<String, Object> claim = new HashMap<>();
-        claim.put("userId", userId);
+        claim.put("id", memberId);
         claim.put("provider", provider);
         claim.put("accessToken", accessToken);
         return createJwt("ACCESS_TOKEN", ACCESS_TOKEN_EXPIRATION_TIME, claim);
     }
 
-    public String createRefreshToken(String userId, AuthProvider provider, String refreshToken) {
+    public String createRefreshToken(String memberId, AuthProvider provider, String refreshToken) {
         HashMap<String, Object> claim = new HashMap<>();
-        claim.put("userId", userId);
+        claim.put("id", memberId);
         claim.put("provider", provider);
         claim.put("refreshToken", refreshToken);
         return createJwt("REFRESH_TOKEN", REFRESH_TOKEN_EXPIRATION_TIME, claim);
