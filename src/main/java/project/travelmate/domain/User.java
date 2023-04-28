@@ -12,7 +12,6 @@ import javax.persistence.*;
 
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-
 @Getter
 public class User extends TimeEntity {
 
@@ -31,15 +30,15 @@ public class User extends TimeEntity {
     @Enumerated(EnumType.STRING)
     private AuthProvider authProvider;
 
-    @Column(length = 500)
-    private String refreshToken;
-
     @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "profile_image_id")
     private ProfileImage profileImage;
 
+    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private RefreshToken refreshToken;
+
     @Builder
-    public User(String id, String email, String name, Integer mannerTemperature, String intro, Gender gender, AuthProvider authProvider, String refreshToken, ProfileImage profileImage) {
+    public User(String id, String email, String name, Integer mannerTemperature, String intro, Gender gender, AuthProvider authProvider, ProfileImage profileImage, RefreshToken refreshToken) {
         this.id = id;
         this.email = email;
         this.name = name;
@@ -47,8 +46,8 @@ public class User extends TimeEntity {
         this.intro = intro;
         this.gender = gender;
         this.authProvider = authProvider;
-        this.refreshToken = refreshToken;
         this.profileImage = profileImage;
+        this.refreshToken = refreshToken;
     }
 
 }
