@@ -7,7 +7,7 @@ import project.travelmate.repository.UserRepository;
 import project.travelmate.request.TokenRequest;
 import project.travelmate.response.SignInResponse;
 import project.travelmate.response.TokenResponse;
-import project.travelmate.util.SecurityUtil;
+import project.travelmate.util.JwtUtil;
 
 import static project.travelmate.advice.ExceptionCodeConst.OAUTH_NOT_SUPPORT_CODE;
 import static project.travelmate.advice.ExceptionCodeConst.USER_NOT_FOUND_CODE;
@@ -19,12 +19,12 @@ public class AuthService {
 
     private KakaoRequestService kakaoRequestService;
     private UserRepository userRepository;
-    private SecurityUtil securityUtil;
+    private JwtUtil jwtUtil;
 
-    public AuthService(KakaoRequestService kakaoRequestService, UserRepository userRepository, SecurityUtil securityUtil) {
+    public AuthService(KakaoRequestService kakaoRequestService, UserRepository userRepository, JwtUtil jwtUtil) {
         this.kakaoRequestService = kakaoRequestService;
         this.userRepository = userRepository;
-        this.securityUtil = securityUtil;
+        this.jwtUtil = jwtUtil;
     }
 
     public SignInResponse redirect(TokenRequest tokenRequest) {
@@ -35,9 +35,9 @@ public class AuthService {
     }
 
     public SignInResponse refreshToken(TokenRequest tokenRequest) {
-        String userId = (String) securityUtil.get(tokenRequest.getRefreshToken()).get("userId");
-        String provider = (String) securityUtil.get(tokenRequest.getRefreshToken()).get("provider");
-        String oldRefreshToken = (String) securityUtil.get(tokenRequest.getRefreshToken()).get("refreshToken");
+        String userId = (String) jwtUtil.get(tokenRequest.getRefreshToken()).get("userId");
+        String provider = (String) jwtUtil.get(tokenRequest.getRefreshToken()).get("provider");
+        String oldRefreshToken = (String) jwtUtil.get(tokenRequest.getRefreshToken()).get("refreshToken");
 
         userExistValidation(userId, provider);
 
@@ -45,7 +45,7 @@ public class AuthService {
         if (KAKAO.getAuthProvider().equals(provider.toLowerCase())) {
             tokenResponse = kakaoRequestService.getRefreshToken(provider, oldRefreshToken);
         }
-        String accessToken = securityUtil.createAccessToken(userId, findByCode(provider.toLowerCase()), tokenResponse.getAccess_token());
+        String accessToken = jwtUtil.createAccessToken(userId, findByCode(provider.toLowerCase()), tokenResponse.getAccess_token());
         SignInResponse signInResponse = new SignInResponse(findByCode(provider.toLowerCase()), null, accessToken, null);
 
         return signInResponse;
