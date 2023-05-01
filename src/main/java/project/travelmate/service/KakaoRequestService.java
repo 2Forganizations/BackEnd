@@ -10,14 +10,16 @@ import org.springframework.util.MultiValueMap;
 import org.springframework.web.reactive.function.BodyInserters;
 import org.springframework.web.reactive.function.client.WebClient;
 import project.travelmate.domain.User;
+import project.travelmate.domain.RefreshToken;
 import project.travelmate.domain.enums.AuthProvider;
 import project.travelmate.domain.enums.Gender;
+import project.travelmate.repository.RefreshTokenRepository;
 import project.travelmate.repository.UserRepository;
 import project.travelmate.request.TokenRequest;
 import project.travelmate.response.KakaoUserInfo;
 import project.travelmate.response.SignInResponse;
 import project.travelmate.response.TokenResponse;
-import project.travelmate.util.SecurityUtil;
+import project.travelmate.util.JwtUtil;
 
 import java.util.Optional;
 
@@ -27,7 +29,8 @@ import static java.lang.String.valueOf;
 public class KakaoRequestService implements RequestService {
 
     private final UserRepository userRepository;
-    private final SecurityUtil securityUtil;
+    private final RefreshTokenRepository refreshTokenRepository;
+    private final JwtUtil jwtUtil;
     private final WebClient webClient;
 
     @Value("${spring.security.oauth2.client.registration.kakao.authorization-grant-type}")
@@ -42,9 +45,10 @@ public class KakaoRequestService implements RequestService {
     @Value("${spring.security.oauth2.client.provider.kakao.token_uri}")
     private String TOKEN_URI;
 
-    public KakaoRequestService(UserRepository userRepository, SecurityUtil securityUtil, WebClient webClient) {
+    public KakaoRequestService(UserRepository userRepository, RefreshTokenRepository refreshTokenRepository, JwtUtil jwtUtil, WebClient webClient) {
         this.userRepository = userRepository;
-        this.securityUtil = securityUtil;
+        this.refreshTokenRepository = refreshTokenRepository;
+        this.jwtUtil = jwtUtil;
         this.webClient = webClient;
     }
 
@@ -54,10 +58,10 @@ public class KakaoRequestService implements RequestService {
         TokenResponse tokenResponse = getToken(tokenRequest);
         KakaoUserInfo kakaoUserInfo = getUserInfo(tokenResponse.getAccess_token());
 
-        String accessToken = securityUtil.createAccessToken(kakaoUserInfo.getId(),
+        String accessToken = jwtUtil.createAccessToken(kakaoUserInfo.getId(),
                 AuthProvider.KAKAO,
                 tokenResponse.getAccess_token());
-        String refreshToken = securityUtil.createRefreshToken(kakaoUserInfo.getId(),
+        String refreshToken = jwtUtil.createRefreshToken(kakaoUserInfo.getId(),
                 AuthProvider.KAKAO,
                 tokenResponse.getRefresh_token());
 
@@ -69,11 +73,15 @@ public class KakaoRequestService implements RequestService {
                     .name(kakaoUserInfo.getKakaoAccount().getProfile().getNickname())
                     .gender(Gender.MALE)
                     .authProvider(AuthProvider.KAKAO)
-                    .refreshToken(refreshToken)
                     .build();
             userRepository.save(user);
-        }
 
+            RefreshToken token = RefreshToken.builder()
+                    .refreshToken(refreshToken)
+                    .user(user)
+                    .build();
+            refreshTokenRepository.save(token);
+        }
 
         return new SignInResponse(AuthProvider.KAKAO, kakaoUserInfo, accessToken, refreshToken);
     }

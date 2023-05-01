@@ -9,7 +9,7 @@ import java.util.Date;
 import java.util.HashMap;
 
 @Component
-public class SecurityUtil {
+public class JwtUtil {
 
     private static final Long ACCESS_TOKEN_EXPIRATION_TIME = 1000 * 60 * 60 * 2L;
     private static final Long REFRESH_TOKEN_EXPIRATION_TIME = 1000 * 60 * 60 * 24 * 30L;
@@ -17,17 +17,17 @@ public class SecurityUtil {
     @Value("jwt.auth.token-secret")
     private String secret;
 
-    public String createAccessToken(String userId, AuthProvider provider, String accessToken) {
+    public String createAccessToken(String id, AuthProvider provider, String accessToken) {
         HashMap<String, Object> claim = new HashMap<>();
-        claim.put("userId", userId);
+        claim.put("id", id);
         claim.put("provider", provider);
         claim.put("accessToken", accessToken);
         return createJwt("ACCESS_TOKEN", ACCESS_TOKEN_EXPIRATION_TIME, claim);
     }
 
-    public String createRefreshToken(String userId, AuthProvider provider, String refreshToken) {
+    public String createRefreshToken(String id, AuthProvider provider, String refreshToken) {
         HashMap<String, Object> claim = new HashMap<>();
-        claim.put("userId", userId);
+        claim.put("id", id);
         claim.put("provider", provider);
         claim.put("refreshToken", refreshToken);
         return createJwt("REFRESH_TOKEN", REFRESH_TOKEN_EXPIRATION_TIME, claim);
