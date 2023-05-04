@@ -44,8 +44,8 @@ public class PlanService {
                 .endDate(request.getEndDate())
                 .minimumAge(request.getMinimumAge())
                 .maximumAge(request.getMaximumAge())
-                .address(new Address(request.getNation(), request.getCity(), request.getDetail(), request.getLatitude(), request.getLongitude()))
-                .requireRecruitMember(request.getRecruitManNumber() + "/" + request.getRecruitWomanNumber() + "/" + request.getRecruitEtcNumber())
+                .address(getAddress(request))
+                .requireRecruitMember(getRequireRecruitMember(request))
                 .currentRecruitMember(request.getCurrentRecruitMember())
                 .planImage(planImageInfo)
                 .user(user)
@@ -67,6 +67,14 @@ public class PlanService {
                 .filePath(thumbnail)
                 .build();
         return planImageRepository.save(planImage);
+    }
+
+    private static Address getAddress(PlanCreateRequest request) {
+        return new Address(request.getNation(), request.getCity(), request.getDetail(), request.getLatitude(), request.getLongitude());
+    }
+
+    private static String getRequireRecruitMember(PlanCreateRequest request) {
+        return request.getRecruitManNumber() + "/" + request.getRecruitWomanNumber() + "/" + request.getRecruitEtcNumber();
     }
 
 }
