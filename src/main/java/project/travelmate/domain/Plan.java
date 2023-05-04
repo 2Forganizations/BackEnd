@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import project.travelmate.domain.base.TimeEntity;
 import project.travelmate.domain.enums.Category;
+import project.travelmate.request.PlanCreateRequest;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -46,7 +47,7 @@ public class Plan extends TimeEntity {
 
     @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "plan_image_id")
-    private PlanImage PlanImage;
+    private PlanImage planImage;
 
     @OneToMany(mappedBy = "plan")
     private List<PlanMember> planMembers = new ArrayList<>();
@@ -59,7 +60,7 @@ public class Plan extends TimeEntity {
     private ChatRoom chatRoom;
 
     @Builder
-    public Plan(Long id, String title, String content, Category category, LocalDateTime startDate, LocalDateTime endDate, Integer minimumAge, Integer maximumAge, Address address, String requireRecruitMember, Integer currentRecruitMember, User user, project.travelmate.domain.PlanImage planImage, ChatRoom chatRoom) {
+    public Plan(Long id, String title, String content, Category category, LocalDateTime startDate, LocalDateTime endDate, Integer minimumAge, Integer maximumAge, Address address, String requireRecruitMember, Integer currentRecruitMember, User user, PlanImage planImage, List<PlanMember> planMembers, List<WaitMember> waitMembers, ChatRoom chatRoom) {
         this.id = id;
         this.title = title;
         this.content = content;
@@ -72,8 +73,35 @@ public class Plan extends TimeEntity {
         this.requireRecruitMember = requireRecruitMember;
         this.currentRecruitMember = currentRecruitMember;
         this.user = user;
-        PlanImage = planImage;
+        this.planImage = planImage;
+        this.planMembers = planMembers;
+        this.waitMembers = waitMembers;
         this.chatRoom = chatRoom;
+    }
+
+    public static Plan of(User user, PlanImage planImage, PlanCreateRequest request) {
+        return Plan.builder()
+                .title(request.getTitle())
+                .content(request.getContent())
+                .category(request.getCategory())
+                .startDate(request.getStartDate())
+                .endDate(request.getEndDate())
+                .minimumAge(request.getMinimumAge())
+                .maximumAge(request.getMaximumAge())
+                .address(getAddress(request))
+                .requireRecruitMember(getRequireRecruitMember(request))
+                .currentRecruitMember(request.getCurrentRecruitMember())
+                .planImage(planImage)
+                .user(user)
+                .build();
+    }
+
+    private static Address getAddress(PlanCreateRequest request) {
+        return new Address(request.getNation(), request.getCity(), request.getDetail(), request.getLatitude(), request.getLongitude());
+    }
+
+    private static String getRequireRecruitMember(PlanCreateRequest request) {
+        return request.getRecruitManNumber() + "/" + request.getRecruitWomanNumber() + "/" + request.getRecruitEtcNumber();
     }
 
 }
