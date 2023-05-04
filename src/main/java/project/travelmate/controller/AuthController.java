@@ -2,17 +2,11 @@ package project.travelmate.controller;
 
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
-import project.travelmate.advice.exception.UserNotFoundException;
-import project.travelmate.domain.User;
 import project.travelmate.repository.UserRepository;
-import project.travelmate.request.AuthInfo;
 import project.travelmate.request.TokenRequest;
 import project.travelmate.response.SignInResponse;
 import project.travelmate.service.AuthService;
-
-import static project.travelmate.advice.ExceptionCodeConst.USER_NOT_FOUND_CODE;
 
 @RestController
 public class AuthController {
@@ -41,13 +35,6 @@ public class AuthController {
     @PostMapping("/auth/token")
     public ResponseEntity<SignInResponse> refreshToken(@RequestBody TokenRequest tokenRequest) {
         return ResponseEntity.ok(authService.refreshToken(tokenRequest));
-    }
-
-    // Test Ref.
-    @GetMapping("/user")
-    public String findMemberProfile(@AuthenticationPrincipal AuthInfo authInfo) {
-        User user = userRepository.findById(authInfo.getId()).orElseThrow(() -> new UserNotFoundException(USER_NOT_FOUND_CODE));
-        return user.getId();
     }
 
 }
