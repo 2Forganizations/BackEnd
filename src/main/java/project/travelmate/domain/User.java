@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import project.travelmate.domain.base.TimeEntity;
 import project.travelmate.domain.enums.AuthProvider;
 import project.travelmate.domain.enums.Gender;
+import reactor.util.annotation.Nullable;
 
 import javax.persistence.*;
 
@@ -32,6 +33,7 @@ public class User extends TimeEntity {
 
     @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "profile_image_id")
+    @Nullable
     private ProfileImage profileImage;
 
     @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
