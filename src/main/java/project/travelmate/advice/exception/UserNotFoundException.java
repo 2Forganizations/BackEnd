@@ -1,11 +1,11 @@
 package project.travelmate.advice.exception;
 
-import project.travelmate.advice.ExceptionCodeConst;
+import static project.travelmate.advice.ExceptionCodeConst.*;
 
 public class UserNotFoundException extends CustomException {
 
-    public UserNotFoundException(ExceptionCodeConst codeConst) {
-        super(codeConst);
+    public UserNotFoundException() {
+        super(USER_NOT_FOUND_CODE);
     }
 
 }
