@@ -33,14 +33,8 @@ public class PlanService {
 
     @Transactional
     public PlanCreateResponse create(String userId, MultipartFile image, PlanCreateRequest request) {
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new UserNotFoundException(ExceptionCodeConst.USER_NOT_FOUND_CODE));
-
-        String thumbnail = s3Util.saveImage(image);
-        PlanImage planImage = PlanImage.builder()
-                .filePath(thumbnail)
-                .build();
-        PlanImage planImageInfo = planImageRepository.save(planImage);
+        User user = getUser(userId);
+        PlanImage planImageInfo = createPlanImage(image);
 
         Plan plan = Plan.builder()
                 .title(request.getTitle())
@@ -53,12 +47,26 @@ public class PlanService {
                 .address(new Address(request.getNation(), request.getCity(), request.getDetail(), request.getLatitude(), request.getLongitude()))
                 .requireRecruitMember(request.getRecruitManNumber() + "/" + request.getRecruitWomanNumber() + "/" + request.getRecruitEtcNumber())
                 .currentRecruitMember(request.getCurrentRecruitMember())
-                .planImage(planImage)
+                .planImage(planImageInfo)
                 .user(user)
                 .build();
         Plan planInfo = planRepository.save(plan);
 
         return new PlanCreateResponse(planInfo.getId(), planImageInfo.getFilePath());
+    }
+
+    private User getUser(String userId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new UserNotFoundException(ExceptionCodeConst.USER_NOT_FOUND_CODE));
+        return user;
+    }
+
+    private PlanImage createPlanImage(MultipartFile image) {
+        String thumbnail = s3Util.saveImage(image);
+        PlanImage planImage = PlanImage.builder()
+                .filePath(thumbnail)
+                .build();
+        return planImageRepository.save(planImage);
     }
 
 }
