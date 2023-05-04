@@ -10,7 +10,6 @@ import project.travelmate.response.TokenResponse;
 import project.travelmate.util.JwtUtil;
 
 import static project.travelmate.advice.ExceptionCodeConst.OAUTH_NOT_SUPPORT_CODE;
-import static project.travelmate.advice.ExceptionCodeConst.USER_NOT_FOUND_CODE;
 import static project.travelmate.domain.enums.AuthProvider.KAKAO;
 import static project.travelmate.domain.enums.AuthProvider.findByCode;
 
@@ -53,7 +52,7 @@ public class AuthService {
 
     private void userExistValidation(String userId, String provider) {
         if (!userRepository.existsByIdAndAuthProvider(userId, findByCode(provider))) {
-            throw new UserNotFoundException(USER_NOT_FOUND_CODE);
+            throw new UserNotFoundException();
         }
     }
 
