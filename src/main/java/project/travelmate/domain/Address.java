@@ -18,4 +18,12 @@ public class Address {
     private String latitude;
     private String longitude;
 
+    public Address(String nation, String city, String detail, String latitude, String longitude) {
+        this.nation = nation;
+        this.city = city;
+        this.detail = detail;
+        this.latitude = latitude;
+        this.longitude = longitude;
+    }
+
 }

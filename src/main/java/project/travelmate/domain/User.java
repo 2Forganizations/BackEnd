@@ -9,6 +9,8 @@ import project.travelmate.domain.enums.AuthProvider;
 import project.travelmate.domain.enums.Gender;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -30,6 +32,9 @@ public class User extends TimeEntity {
     @Enumerated(EnumType.STRING)
     private AuthProvider authProvider;
 
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    private List<Plan> planList = new ArrayList<>();
+
     @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "profile_image_id")
     private ProfileImage profileImage;
@@ -38,7 +43,7 @@ public class User extends TimeEntity {
     private RefreshToken refreshToken;
 
     @Builder
-    public User(String id, String email, String name, Integer mannerTemperature, String intro, Gender gender, AuthProvider authProvider, ProfileImage profileImage, RefreshToken refreshToken) {
+    public User(String id, String email, String name, Integer mannerTemperature, String intro, Gender gender, AuthProvider authProvider, ProfileImage profileImage) {
         this.id = id;
         this.email = email;
         this.name = name;
@@ -47,7 +52,6 @@ public class User extends TimeEntity {
         this.gender = gender;
         this.authProvider = authProvider;
         this.profileImage = profileImage;
-        this.refreshToken = refreshToken;
     }
 
 }
