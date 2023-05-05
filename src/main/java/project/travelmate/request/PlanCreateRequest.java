@@ -1,4 +1,5 @@
 package project.travelmate.request;
+import lombok.Builder;
 import lombok.Getter;
 
 import org.springframework.format.annotation.DateTimeFormat;

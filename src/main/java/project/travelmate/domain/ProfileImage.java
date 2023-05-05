@@ -1,6 +1,7 @@
 package project.travelmate.domain;
 
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -17,5 +18,11 @@ public class ProfileImage {
     private Long id;
 
     private String filePath;
+
+    @Builder
+    public ProfileImage(Long id, String filePath) {
+        this.id = id;
+        this.filePath = filePath;
+    }
 
 }
