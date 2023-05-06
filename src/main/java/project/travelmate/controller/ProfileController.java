@@ -3,10 +3,8 @@ package project.travelmate.controller;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import project.travelmate.request.AuthInfo;
 import project.travelmate.request.MemberProfileUpdateRequest;
 import project.travelmate.response.ProfileResponse;
@@ -25,7 +23,7 @@ public class ProfileController {
         return ResponseEntity.ok(profileResponse);
     }
 
-    @PostMapping("/api/member/edit")
+    @PostMapping("/api/member/profile/edit")
     public ResponseEntity<Void> editProfile(
             @RequestBody MemberProfileUpdateRequest memberProfileUpdateRequest,
             @AuthenticationPrincipal AuthInfo authInfo
@@ -34,4 +32,15 @@ public class ProfileController {
 
         return ResponseEntity.ok(null);
     }
+
+    @PostMapping("/api/member/profileimage/edit")
+    public ResponseEntity<Void> editProfileImage(
+        @AuthenticationPrincipal AuthInfo authInfo,
+        @RequestPart(value = "profileImage") MultipartFile imageFile
+    ) {
+        profileService.editProfileImage(authInfo.getId(), imageFile);
+
+        return ResponseEntity.ok(null);
+    }
+
 }

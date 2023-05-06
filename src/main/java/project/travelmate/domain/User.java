@@ -57,4 +57,13 @@ public class User extends TimeEntity {
         this.name = memberProfileUpdateRequest.getName();
         this.intro = memberProfileUpdateRequest.getIntro();
     }
+
+    public void editProfileImagePath(String filePath) {
+        if (this.profileImage == null) {
+            this.profileImage = new ProfileImage(filePath);
+        } else {
+            this.profileImage.edit(filePath);
+        }
+
+    }
 }

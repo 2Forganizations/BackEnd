@@ -23,4 +23,8 @@ public class ProfileImage {
     public ProfileImage(String filePath) {
         this.filePath = filePath;
     }
+
+    public void edit(String filePath) {
+        this.filePath = filePath;
+    }
 }
