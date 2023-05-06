@@ -22,17 +22,21 @@ class UserRepositoryTest {
     @Test
     @DisplayName("findUserWithProfileImageById 확인")
     void findUserWithProfileImageById() {
-        ProfileImage profileImage = ProfileImage.builder().filePath("path").build();
-        User user = User.builder()
-                .id("user1_id").email("email").name("user1").gender(Gender.MALE).intro("intro").profileImage(profileImage)
-                .build();
+        User user = makeUser("path");
         userRepository.save(user);
 
-        User findUser = userRepository.findUserWithProfileImageById("user1_id")
+        User findUser = userRepository.findUserWithProfileImageById("user_id")
                 .orElseThrow(UserNotFoundException::new);
 
         assertThat(user.getName()).isEqualTo(findUser.getName());
         assertThat(user.getGender()).isEqualTo(findUser.getGender());
         assertThat(user.getProfileImage().getFilePath()).isEqualTo(findUser.getProfileImage().getFilePath());
+    }
+
+    private User makeUser(String profileImagePath) {
+        ProfileImage profileImage = ProfileImage.builder().filePath(profileImagePath).build();
+        return User.builder()
+                .id("user_id").email("email").name("user1").gender(Gender.MALE).intro("intro").profileImage(profileImage)
+                .build();
     }
 }

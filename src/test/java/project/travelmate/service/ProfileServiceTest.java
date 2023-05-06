@@ -34,13 +34,10 @@ class ProfileServiceTest {
 
         @Test
         void success() {
-            ProfileImage profileImage = ProfileImage.builder().filePath("path").build();
-            User user = User.builder()
-                    .id("user1_id").email("email").name("user1").gender(Gender.MALE).intro("intro").profileImage(profileImage)
-                    .build();
+            User user = makeUser("path");
             Mockito.when(userRepository.findById(Mockito.anyString())).thenReturn(Optional.of(user));
 
-            ProfileResponse userResponse = profileService.getProfile("user1_id");
+            ProfileResponse userResponse = profileService.getProfile("user_id");
 
             assertThat(userResponse.getId()).isEqualTo(user.getId());
             assertThat(userResponse.getName()).isEqualTo(user.getName());
@@ -53,23 +50,31 @@ class ProfileServiceTest {
         void userNotFound() {
             Mockito.when(userRepository.findById(Mockito.anyString())).thenReturn(Optional.empty());
 
-            assertThatThrownBy(() -> profileService.getProfile("user1_id"))
+            assertThatThrownBy(() -> profileService.getProfile("user_id"))
                     .isInstanceOf(UserNotFoundException.class);
         }
 
         @Test
         void profileImageNotExist() {
-            User user = User.builder()
-                    .id("user1_id").email("email").name("user1").gender(Gender.MALE).intro("intro")
-                    .build();
+            User user = makeUser();
             Mockito.when(userRepository.findById(Mockito.anyString())).thenReturn(Optional.of(user));
 
-            ProfileResponse userResponse = profileService.getProfile("user1_id");
+            ProfileResponse userResponse = profileService.getProfile("user_id");
 
             assertThat(userResponse.getProfileUrl()).isEqualTo(null);
         }
+
+    }
+    private User makeUser() {
+        return User.builder()
+                .id("user_id").email("email").name("user1").gender(Gender.MALE).intro("intro")
+                .build();
     }
 
-
-
+    private User makeUser(String profileImagePath) {
+        ProfileImage profileImage = ProfileImage.builder().filePath(profileImagePath).build();
+        return User.builder()
+                .id("user_id").email("email").name("user1").gender(Gender.MALE).intro("intro").profileImage(profileImage)
+                .build();
+    }
 }
