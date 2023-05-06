@@ -6,9 +6,8 @@ import org.springframework.transaction.annotation.Transactional;
 import project.travelmate.advice.exception.UserNotFoundException;
 import project.travelmate.domain.User;
 import project.travelmate.repository.UserRepository;
+import project.travelmate.request.MemberProfileUpdateRequest;
 import project.travelmate.response.ProfileResponse;
-
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -23,4 +22,9 @@ public class ProfileService {
     }
 
 
+    @Transactional
+    public void editProfile(String id, MemberProfileUpdateRequest memberProfileUpdateRequest) {
+        User user = userRepository.findById(id).orElseThrow(UserNotFoundException::new);
+        user.edit(memberProfileUpdateRequest);
+    }
 }

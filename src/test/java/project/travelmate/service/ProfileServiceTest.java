@@ -12,12 +12,14 @@ import project.travelmate.domain.ProfileImage;
 import project.travelmate.domain.User;
 import project.travelmate.domain.enums.Gender;
 import project.travelmate.repository.UserRepository;
+import project.travelmate.request.MemberProfileUpdateRequest;
 import project.travelmate.response.ProfileResponse;
 
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.mockito.ArgumentMatchers.anyString;
 
 
 @ExtendWith(MockitoExtension.class)
@@ -35,7 +37,7 @@ class ProfileServiceTest {
         @Test
         void success() {
             User user = makeUser("path");
-            Mockito.when(userRepository.findById(Mockito.anyString())).thenReturn(Optional.of(user));
+            Mockito.when(userRepository.findById(anyString())).thenReturn(Optional.of(user));
 
             ProfileResponse userResponse = profileService.getProfile("user_id");
 
@@ -48,7 +50,7 @@ class ProfileServiceTest {
 
         @Test
         void userNotFound() {
-            Mockito.when(userRepository.findById(Mockito.anyString())).thenReturn(Optional.empty());
+            Mockito.when(userRepository.findById(anyString())).thenReturn(Optional.empty());
 
             assertThatThrownBy(() -> profileService.getProfile("user_id"))
                     .isInstanceOf(UserNotFoundException.class);
@@ -57,7 +59,7 @@ class ProfileServiceTest {
         @Test
         void profileImageNotExist() {
             User user = makeUser();
-            Mockito.when(userRepository.findById(Mockito.anyString())).thenReturn(Optional.of(user));
+            Mockito.when(userRepository.findById(anyString())).thenReturn(Optional.of(user));
 
             ProfileResponse userResponse = profileService.getProfile("user_id");
 
@@ -65,6 +67,25 @@ class ProfileServiceTest {
         }
 
     }
+
+    @Nested
+    class EditProfile {
+        @Test
+        void success() {
+            User user = makeUser();
+            Mockito.when(userRepository.findById(anyString())).thenReturn(Optional.of(user));
+            MemberProfileUpdateRequest memberProfileUpdateRequest = new MemberProfileUpdateRequest("edit_name", "edit_intro");
+
+            profileService.editProfile("user_id", memberProfileUpdateRequest);
+
+            assertThat(user.getName()).isEqualTo(memberProfileUpdateRequest.getName());
+            assertThat(user.getIntro()).isEqualTo(memberProfileUpdateRequest.getIntro());
+        }
+
+    }
+
+
+
     private User makeUser() {
         return User.builder()
                 .id("user_id").email("email").name("user1").gender(Gender.MALE).intro("intro")
