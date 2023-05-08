@@ -5,7 +5,7 @@ import project.travelmate.domain.*;
 
 import static project.travelmate.utils.constant.Constants.*;
 
-public class SetUpInfo {
+public class SetUpData {
 
     public ProfileImage profileImage;
     public User user;
