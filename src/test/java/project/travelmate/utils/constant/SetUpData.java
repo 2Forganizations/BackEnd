@@ -2,6 +2,7 @@ package project.travelmate.utils.constant;
 
 import org.junit.jupiter.api.BeforeEach;
 import project.travelmate.domain.*;
+import project.travelmate.request.PlanCreateRequest;
 
 import static project.travelmate.utils.constant.Constants.*;
 
@@ -11,6 +12,8 @@ public class SetUpData {
     public User user;
     public PlanImage planImage;
     public Plan plan;
+
+    public PlanCreateRequest planCreateRequest;
 
     @BeforeEach
     public void setup() {
@@ -46,6 +49,25 @@ public class SetUpData {
                 .currentRecruitMember(CURRENT_RECRUIT_MEMBER)
                 .planImage(planImage)
                 .user(user)
+                .build();
+
+        planCreateRequest = PlanCreateRequest.builder()
+                .title(TITLE)
+                .content(CONTENT)
+                .category(CATEGORY)
+                .startDate(START_DATE)
+                .endDate(END_DATE)
+                .minimumAge(MINIMUM_AGE)
+                .maximumAge(MAXIMUM_AGE)
+                .nation(NATION)
+                .city(CITY)
+                .detail(DETAIL)
+                .latitude(LATITUDE)
+                .longitude(LONGITUDE)
+                .recruitManNumber(RECRUIT_MAN_NUMBER)
+                .recruitWomanNumber(RECRUIT_WOMAN_NUMBER)
+                .recruitEtcNumber(RECRUIT_ETC_NUMBER)
+                .currentRecruitMember(CURRENT_RECRUIT_MEMBER)
                 .build();
     }
 
