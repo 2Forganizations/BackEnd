@@ -9,7 +9,7 @@ import project.travelmate.utils.constant.SetUpData;
 @DataJpaTest
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
-public class RepositoryTest extends SetUpData {
+class RepositoryTest extends SetUpData {
 
     @Autowired
     protected PlanRepository planRepository;

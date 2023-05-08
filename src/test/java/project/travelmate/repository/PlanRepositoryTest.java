@@ -8,7 +8,7 @@ import project.travelmate.domain.enums.Category;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
-public class PlanRepositoryTest extends RepositoryTest {
+class PlanRepositoryTest extends RepositoryTest {
 
     @DisplayName("여행 계획 생성 API - Repository")
     @Test
