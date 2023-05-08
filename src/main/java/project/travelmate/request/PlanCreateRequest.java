@@ -32,6 +32,7 @@ public class PlanCreateRequest {
     private Integer recruitEtcNumber;
     private Integer currentRecruitMember;
 
+    @Builder
     public PlanCreateRequest(String title, String content, Category category, LocalDateTime startDate, LocalDateTime endDate, Integer minimumAge, Integer maximumAge, String nation, String city, String detail, String latitude, String longitude, Integer recruitManNumber, Integer recruitWomanNumber, Integer recruitEtcNumber, Integer currentRecruitMember) {
         this.title = title;
         this.content = content;
