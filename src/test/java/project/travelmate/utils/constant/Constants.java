@@ -8,7 +8,7 @@ import java.time.LocalDateTime;
 
 public class Constants {
 
-    public static final String FILE_PATH = "Test FilePath";
+    public static final String FILE_PATH = "src/test/java/resources/test_image.jpg";
 
     public static final String SOCIAL_ID = "Test Social Id";
     public static final String EMAIL = "Test Email";
