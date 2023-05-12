@@ -7,6 +7,8 @@ import lombok.NoArgsConstructor;
 import project.travelmate.domain.base.TimeEntity;
 import project.travelmate.domain.enums.AuthProvider;
 import project.travelmate.domain.enums.Gender;
+import project.travelmate.request.MemberProfileUpdateRequest;
+import reactor.util.annotation.Nullable;
 
 import javax.persistence.*;
 
@@ -32,6 +34,7 @@ public class User extends TimeEntity {
 
     @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "profile_image_id")
+    @Nullable
     private ProfileImage profileImage;
 
     @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
@@ -50,4 +53,17 @@ public class User extends TimeEntity {
         this.refreshToken = refreshToken;
     }
 
+    public void edit(MemberProfileUpdateRequest memberProfileUpdateRequest) {
+        this.name = memberProfileUpdateRequest.getName();
+        this.intro = memberProfileUpdateRequest.getIntro();
+    }
+
+    public void editProfileImagePath(String filePath) {
+        if (this.profileImage == null) {
+            this.profileImage = new ProfileImage(filePath);
+        } else {
+            this.profileImage.edit(filePath);
+        }
+
+    }
 }

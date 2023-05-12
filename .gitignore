@@ -38,4 +38,8 @@ out/
 
 ### yml ###
 **.yml
+
+
+### woong ###
 /src/main/java/project/travelmate/test/TestController.java
+/src/main/resources/static/**

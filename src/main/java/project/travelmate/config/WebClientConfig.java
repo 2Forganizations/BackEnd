@@ -14,9 +14,4 @@ public class WebClientConfig {
         return WebClient.builder().build();
     }
 
-    @Bean
-    public LoginInterceptor loginInterceptor(JwtUtil jwtUtil) {
-        return new LoginInterceptor(jwtUtil);
-    }
-
 }
