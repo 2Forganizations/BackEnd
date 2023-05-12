@@ -49,7 +49,7 @@ class ProfileControllerTest {
 
     @BeforeEach
     void setAuthUser() {
-        AuthInfo authInfo = new AuthInfo("id", "KAKAO", "123456");
+        AuthInfo authInfo = new AuthInfo("id");
         UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(authInfo, null, null);
         SecurityContextHolder.getContext().setAuthentication(authToken);
     }

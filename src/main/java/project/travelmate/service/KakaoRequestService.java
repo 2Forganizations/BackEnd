@@ -58,12 +58,8 @@ public class KakaoRequestService implements RequestService {
         TokenResponse tokenResponse = getToken(tokenRequest);
         KakaoUserInfo kakaoUserInfo = getUserInfo(tokenResponse.getAccess_token());
 
-        String accessToken = jwtUtil.createAccessToken(kakaoUserInfo.getId(),
-                AuthProvider.KAKAO,
-                tokenResponse.getAccess_token());
-        String refreshToken = jwtUtil.createRefreshToken(kakaoUserInfo.getId(),
-                AuthProvider.KAKAO,
-                tokenResponse.getRefresh_token());
+        String accessToken = jwtUtil.createAccessToken(kakaoUserInfo.getId());
+        String refreshToken = jwtUtil.createRefreshToken(kakaoUserInfo.getId());
 
         Optional<User> findUser = userRepository.findById(valueOf(kakaoUserInfo.getId()));
         if (findUser.isEmpty()) {
@@ -104,7 +100,7 @@ public class KakaoRequestService implements RequestService {
                 .body(BodyInserters.fromFormData(formData))
                 .retrieve()
                 .onStatus(
-                        HttpStatus.UNAUTHORIZED::equals,
+                        HttpStatus::is4xxClientError,
                         response -> response.bodyToMono(String.class).map(Exception::new))
                 .bodyToMono(TokenResponse.class)
                 .block();
