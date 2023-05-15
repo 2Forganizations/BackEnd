@@ -23,8 +23,8 @@ public class ProfileService {
     private final FileSystem fileSystem;
 
     public ProfileResponse getProfile(String id) {
-//        return userRepository.findUserWithProfileImageById(id).map(ProfileResponse::new).orElseThrow(UserNotFoundException::new);
-        return userRepository.findById(id).map(ProfileResponse::new).orElseThrow(UserNotFoundException::new);
+        return userRepository.findUserWithProfileImageById(id).map(ProfileResponse::new).orElseThrow(UserNotFoundException::new);
+//        return userRepository.findById(id).map(ProfileResponse::new).orElseThrow(UserNotFoundException::new);
     }
 
 
@@ -36,18 +36,12 @@ public class ProfileService {
 
     @Transactional
     public void editProfileImage(String id, MultipartFile imageFile) {
-        User user = userRepository.findById(id).orElseThrow(UserNotFoundException::new);
+        ProfileImage profileImage = userRepository.findUserWithProfileImageById(id).map(user -> user.getProfileImage())
+                .orElseThrow(UserNotFoundException::new);
+        fileSystem.deleteImage(profileImage.getFilePath());
 
-        if (isProfileImageExist(user)) {
-            String filePath = user.getProfileImage().getFilePath();
-            fileSystem.deleteImage(filePath);
-        }
         String savedFilePath = fileSystem.saveImage(imageFile);
-        user.editProfileImagePath(savedFilePath);
 
-    }
-
-    private boolean isProfileImageExist(User user) {
-        return Optional.ofNullable(user.getProfileImage()).isPresent();
+        profileImage.edit(savedFilePath);
     }
 }

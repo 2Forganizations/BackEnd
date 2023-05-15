@@ -39,6 +39,9 @@ public class S3Util implements FileSystem {
 
     @Override
     public void deleteImage(String imageUrl) {
+        if (imageUrl == null) {
+            return;
+        }
         String prefixUrl = amazonS3.getUrl(bucket, "").toString();
         String image_key = imageUrl.replaceAll(prefixUrl, "");
         amazonS3.deleteObject(bucket, image_key);
