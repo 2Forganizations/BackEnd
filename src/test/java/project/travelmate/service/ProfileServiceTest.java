@@ -37,7 +37,7 @@ class ProfileServiceTest {
         @Test
         void success() {
             User user = makeUser("path");
-            Mockito.when(userRepository.findById(anyString())).thenReturn(Optional.of(user));
+            Mockito.when(userRepository.findUserWithProfileImageById(anyString())).thenReturn(Optional.of(user));
 
             ProfileResponse userResponse = profileService.getProfile("user_id");
 
@@ -50,7 +50,7 @@ class ProfileServiceTest {
 
         @Test
         void userNotFound() {
-            Mockito.when(userRepository.findById(anyString())).thenReturn(Optional.empty());
+            Mockito.when(userRepository.findUserWithProfileImageById(anyString())).thenReturn(Optional.empty());
 
             assertThatThrownBy(() -> profileService.getProfile("user_id"))
                     .isInstanceOf(UserNotFoundException.class);
@@ -59,7 +59,7 @@ class ProfileServiceTest {
         @Test
         void profileImageNotExist() {
             User user = makeUser();
-            Mockito.when(userRepository.findById(anyString())).thenReturn(Optional.of(user));
+            Mockito.when(userRepository.findUserWithProfileImageById(anyString())).thenReturn(Optional.of(user));
 
             ProfileResponse userResponse = profileService.getProfile("user_id");
 
