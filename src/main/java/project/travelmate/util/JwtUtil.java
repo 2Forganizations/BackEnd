@@ -59,17 +59,17 @@ public class JwtUtil {
                     .build()
                     .verify(jwtToken);
         } catch (AlgorithmMismatchException algorithmMismatchException){
-            log.debug("토큰 알고리즘 미스매칭");
-            throw new IllegalArgumentException();
+            log.info("토큰 알고리즘 미스매칭");
+            throw new IllegalArgumentException("토큰 알고리즘 미스매칭");
         } catch (SignatureVerificationException signatureVerificationException){
-            log.debug("토큰 signature verifying 에러");
-            throw new IllegalArgumentException();
+            log.info("토큰 signature verifying 에러");
+            throw new IllegalArgumentException("토큰 signature verifying 에러");
         } catch (TokenExpiredException tokenExpiredException) {
-            log.debug("Access토큰 만료됨");
+            log.info("Access토큰 만료됨");
             throw new TokenExpiredException("토큰 만료됨");
         } catch (InvalidClaimException invalidClaimException) {
-            log.debug("토큰 클레임 에러");
-            throw new IllegalArgumentException();
+            log.info("토큰 클레임 에러");
+            throw new IllegalArgumentException("토큰 클레임 에러");
         }
     }
 

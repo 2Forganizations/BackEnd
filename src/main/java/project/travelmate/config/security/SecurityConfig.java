@@ -15,6 +15,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
@@ -52,20 +53,20 @@ public class SecurityConfig {
 
         http
                 .authorizeRequests()
-                .antMatchers(HttpMethod.OPTIONS, "/api/*").permitAll()
+//                .antMatchers(HttpMethod.OPTIONS, "/api/*").permitAll()
                 .antMatchers("/api/**").authenticated() //이 패턴 인증필요하다
-                .anyRequest().permitAll()
+//                .anyRequest().permitAll()
                 .and()
                 .formLogin().disable()
                 .csrf().disable()
                 .httpBasic().disable()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
-                .addFilter(new JwtAuthorizationFilter(authenticationManager, jwtUtil))
-                .exceptionHandling().authenticationEntryPoint(authenticationEntryPoint())
-                .and()
+                .addFilterBefore(new JwtAuthorizationFilter(authenticationManager, jwtUtil), UsernamePasswordAuthenticationFilter.class)
                 .authenticationManager(authenticationManager)
-                .cors().configurationSource(corsConfigurationSource());
+                .cors().configurationSource(corsConfigurationSource())
+                .and()
+                .exceptionHandling().authenticationEntryPoint(authenticationEntryPoint);
         return http.build();
     }
 
@@ -73,12 +74,6 @@ public class SecurityConfig {
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
-
-    @Bean
-    public AuthenticationEntryPoint authenticationEntryPoint() {
-        return new CustomAuthenticationEntryPoint();
-    }
-
 
     /**
      * spring security 에 대한 cors config
