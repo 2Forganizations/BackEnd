@@ -34,21 +34,25 @@ public class AuthService {
         throw new OauthNotSupportException(OAUTH_NOT_SUPPORT_CODE);
     }
 
+    /**
+     * refresh token 발급
+     */
     public SignInResponse refreshToken(TokenRequest tokenRequest) {
-        String userId = (String) jwtUtil.get(tokenRequest.getRefreshToken()).get("userId");
-        String provider = (String) jwtUtil.get(tokenRequest.getRefreshToken()).get("provider");
-        String oldRefreshToken = (String) jwtUtil.get(tokenRequest.getRefreshToken()).get("refreshToken");
-
-        userExistValidation(userId, provider);
-
-        TokenResponse tokenResponse = null;
-        if (KAKAO.getAuthProvider().equals(provider.toLowerCase())) {
-            tokenResponse = kakaoRequestService.getRefreshToken(provider, oldRefreshToken);
-        }
-        String accessToken = jwtUtil.createAccessToken(userId, findByCode(provider.toLowerCase()), tokenResponse.getAccess_token());
-        SignInResponse signInResponse = new SignInResponse(findByCode(provider.toLowerCase()), null, accessToken, null);
-
-        return signInResponse;
+//        String userId = (String) jwtUtil.get(tokenRequest.getRefreshToken()).get("userId");
+//        String provider = (String) jwtUtil.get(tokenRequest.getRefreshToken()).get("provider");
+//        String oldRefreshToken = (String) jwtUtil.get(tokenRequest.getRefreshToken()).get("refreshToken");
+//
+//        userExistValidation(userId, provider);
+//
+//        TokenResponse tokenResponse = null;
+//        if (KAKAO.getAuthProvider().equals(provider.toLowerCase())) {
+//            tokenResponse = kakaoRequestService.getRefreshToken(provider, oldRefreshToken);
+//        }
+//        String accessToken = jwtUtil.createAccessToken(userId, findByCode(provider.toLowerCase()), tokenResponse.getAccess_token());
+//        SignInResponse signInResponse = new SignInResponse(findByCode(provider.toLowerCase()), null, accessToken, null);
+//
+//        return signInResponse;
+        return null;
     }
 
     private void userExistValidation(String userId, String provider) {

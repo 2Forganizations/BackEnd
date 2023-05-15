@@ -6,13 +6,9 @@ import lombok.Getter;
 public class AuthInfo {
 
     private String id;
-    private String authProvider;
-    private String accessToken;
 
-    public AuthInfo(String id, String authProvider, String accessToken) {
+    public AuthInfo(String id) {
         this.id = id;
-        this.authProvider = authProvider;
-        this.accessToken = accessToken;
     }
 
 }
