@@ -9,6 +9,7 @@ import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.reactive.function.BodyInserters;
 import org.springframework.web.reactive.function.client.WebClient;
+import project.travelmate.domain.ProfileImage;
 import project.travelmate.domain.User;
 import project.travelmate.domain.RefreshToken;
 import project.travelmate.domain.enums.AuthProvider;
@@ -63,12 +64,14 @@ public class KakaoRequestService implements RequestService {
 
         Optional<User> findUser = userRepository.findById(valueOf(kakaoUserInfo.getId()));
         if (findUser.isEmpty()) {
+            ProfileImage profileImage = ProfileImage.builder().filePath(null).build();
             User user = User.builder()
                     .id(kakaoUserInfo.getId())
                     .email(kakaoUserInfo.getKakaoAccount().getEmail())
                     .name(kakaoUserInfo.getKakaoAccount().getProfile().getNickname())
                     .gender(Gender.MALE)
                     .authProvider(AuthProvider.KAKAO)
+                    .profileImage(profileImage)
                     .build();
             userRepository.save(user);
 
