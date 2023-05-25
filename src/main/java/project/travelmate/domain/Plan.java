@@ -1,10 +1,9 @@
 package project.travelmate.domain;
 
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import project.travelmate.domain.base.TimeEntity;
 import project.travelmate.domain.enums.Category;
+import project.travelmate.request.PlanCreateRequest;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -34,21 +33,62 @@ public class Plan extends TimeEntity {
     @Embedded
     private Address address;
 
-    private Integer requireRecruitMember;
-    private Integer currentRecruitMember;
+    private String requireRecruitMember;
+    private String currentRecruitMember;
 
     @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name ="plan_image_id")
-    private PlanImage PlanImage;
+    private PlanImage planImage;
 
-    @OneToMany(mappedBy = "plan")
+    @OneToMany(mappedBy = "plan", cascade = CascadeType.ALL)
     private List<PlanMember> planMembers = new ArrayList<>();
 
-    @OneToMany(mappedBy = "plan")
+    @OneToMany(mappedBy = "plan", cascade = CascadeType.ALL)
     private List<WaitMember> waitMembers = new ArrayList<>();
 
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "chatroom_id")
     private ChatRoom chatRoom;
+
+    @Builder
+    public Plan(String title, String content, Category category, LocalDateTime startDate, LocalDateTime endDate, Address address, String requireRecruitMember, String currentRecruitMember) {
+        this.title = title;
+        this.content = content;
+        this.category = category;
+        this.startDate = startDate;
+        this.endDate = endDate;
+        this.address = address;
+        this.requireRecruitMember = requireRecruitMember;
+        this.currentRecruitMember = currentRecruitMember;
+    }
+
+    public static Plan createPlan(PlanCreateRequest planCreateRequest, String ownerId) {
+        Plan plan = Plan.builder()
+                .title(planCreateRequest.getTitle())
+                .content(planCreateRequest.getContent())
+                .category(planCreateRequest.getCategory())
+                .startDate(planCreateRequest.getStartDate())
+                .endDate(planCreateRequest.getEndDate())
+                .address(new Address(planCreateRequest))
+                .requireRecruitMember(
+                        addForm(planCreateRequest.getRecruitManNumber(),
+                                planCreateRequest.getRecruitWomanNumber(),
+                                planCreateRequest.getRecruitEtcNumber()
+                        )
+                )
+                .currentRecruitMember(
+                        addForm(planCreateRequest.getRecruitManNumber(),
+                                planCreateRequest.getRecruitWomanNumber(),
+                                planCreateRequest.getRecruitEtcNumber()
+                        )
+                ).build();
+        PlanMember planMember = PlanMember.ofOwner(plan, User.builder().id(ownerId).build());
+        plan.planMembers.add(planMember);
+        return plan;
+    }
+
+    public static String addForm(Integer manNumber, Integer womanNumber, Integer etcNumber) {
+        return manNumber + "/" + womanNumber + "/" + etcNumber;
+    }
 
 }

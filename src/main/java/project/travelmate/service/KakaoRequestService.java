@@ -111,6 +111,20 @@ public class KakaoRequestService implements RequestService {
 
     @Override
     public KakaoUserInfo getUserInfo(String accessToken) {
+        String block = webClient
+                .mutate()
+                .baseUrl("https://kapi.kakao.com")
+                .build()
+                .get()
+                .uri("/v2/user/me")
+                .headers(h -> h.setBearerAuth(accessToken))
+                .retrieve()
+                .onStatus(
+                        HttpStatus.UNAUTHORIZED::equals,
+                        response -> response.bodyToMono(String.class).map(Exception::new))
+                .bodyToMono(String.class)
+                .block();
+
         return webClient
                 .mutate()
                 .baseUrl("https://kapi.kakao.com")
