@@ -3,10 +3,12 @@ package project.travelmate.service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import project.travelmate.advice.exception.PlanNotFoundException;
 import project.travelmate.domain.Plan;
 import project.travelmate.repository.PlanRepository;
 import project.travelmate.request.PlanCreateRequest;
 import project.travelmate.response.PlanCreateResponse;
+import project.travelmate.response.PlanDetailResponse;
 
 @Service
 @Transactional(readOnly = true)
@@ -22,5 +24,11 @@ public class PlanService {
 
         // require create plan chatroom code
         return new PlanCreateResponse(plan);
+    }
+
+    public PlanDetailResponse getPlanDetail(Long planId) {
+        Plan plan = planRepository.findPlanWithPlanMembersById(planId).orElseThrow(PlanNotFoundException::new);
+
+        return new PlanDetailResponse(plan);
     }
 }

@@ -29,7 +29,6 @@ import java.time.LocalDateTime;
 
 
 @AutoConfigureMockMvc
-//@WebMvcTest(controllers = PlanControllerTest.class)
 @WebMvcTest(
         controllers = PlanController.class,
         excludeFilters = {
@@ -50,7 +49,7 @@ class PlanControllerTest {
 
     @Test
     @WithMockCustomUser
-    public void test() throws Exception {
+    public void createPlan() throws Exception {
         Mockito.when(planService.createPlan(ArgumentMatchers.anyString(), ArgumentMatchers.nullable(PlanCreateRequest.class)))
                 .thenReturn(new PlanCreateResponse(1L));
 
@@ -68,6 +67,17 @@ class PlanControllerTest {
                 )
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.planId").exists());
+    }
+
+    @Test
+    @WithMockCustomUser
+    public void getPlanDetail() throws Exception {
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/1/get")
+                        .with(SecurityMockMvcRequestPostProcessors.csrf())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON)
+                )
+                .andExpect(MockMvcResultMatchers.status().isOk());
     }
 
 }

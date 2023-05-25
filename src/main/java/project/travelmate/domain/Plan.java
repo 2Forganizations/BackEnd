@@ -21,11 +21,13 @@ public class Plan extends TimeEntity {
     private Long id;
 
     private String title;
-
     private String content;
 
     @Enumerated(value = EnumType.STRING)
     private Category category;
+
+    private Integer minAge;
+    private Integer maxAge;
 
     private LocalDateTime startDate;
     private LocalDateTime endDate;
@@ -51,7 +53,8 @@ public class Plan extends TimeEntity {
     private ChatRoom chatRoom;
 
     @Builder
-    public Plan(String title, String content, Category category, LocalDateTime startDate, LocalDateTime endDate, Address address, String requireRecruitMember, String currentRecruitMember) {
+    public Plan(String title, String content, Category category, LocalDateTime startDate, LocalDateTime endDate,
+                Address address, String requireRecruitMember, String currentRecruitMember, Integer minAge, Integer maxAge) {
         this.title = title;
         this.content = content;
         this.category = category;
@@ -60,6 +63,8 @@ public class Plan extends TimeEntity {
         this.address = address;
         this.requireRecruitMember = requireRecruitMember;
         this.currentRecruitMember = currentRecruitMember;
+        this.minAge = minAge;
+        this.maxAge = maxAge;
     }
 
     public static Plan createPlan(PlanCreateRequest planCreateRequest, String ownerId) {
@@ -69,6 +74,8 @@ public class Plan extends TimeEntity {
                 .category(planCreateRequest.getCategory())
                 .startDate(planCreateRequest.getStartDate())
                 .endDate(planCreateRequest.getEndDate())
+                .minAge(planCreateRequest.getMinAge())
+                .maxAge(planCreateRequest.getMaxAge())
                 .address(new Address(planCreateRequest))
                 .requireRecruitMember(
                         addForm(planCreateRequest.getRecruitManNumber(),

@@ -7,6 +7,7 @@ public enum ExceptionCodeConst {
 
     EXAMPLE_INVALID_CODE("EXAMPLE", "EXAMPLE"),
     USER_NOT_FOUND_CODE("USER_NOT_FOUND", "유저를 찾을 수 없습니다."),
+    PLAN_NOT_FOUND_CODE("PLAN_NOT_FOUND", "플랜을 찾을 수 없습니다."),
     OAUTH_NOT_SUPPORT_CODE("OAUTH_NOT_SUPPORT", "지원되지 않는 인증입니다."),
     EXPIRED_ACCESS_TOKEN_CODE("EXPIRED_ACCESS_TOKEN", "기한이 만료된 토큰입니다."),
     EMPTY_FILE_CODE("EMPTY_FILE", "비어있는 파일이 들어왔습니다."),
