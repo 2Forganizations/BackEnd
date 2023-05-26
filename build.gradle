@@ -37,6 +37,7 @@ dependencies {
 	implementation 'io.awspring.cloud:spring-cloud-starter-aws:2.4.4'
 //
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+	testImplementation 'org.springframework.security:spring-security-test'
 }
 
 tasks.named('test') {

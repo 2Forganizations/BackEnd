@@ -1,8 +1,10 @@
 package project.travelmate.domain;
 
 import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import project.travelmate.request.PlanCreateRequest;
 
 import javax.persistence.Embeddable;
 
@@ -18,4 +20,11 @@ public class Address {
     private String latitude;
     private String longitude;
 
+    public Address(PlanCreateRequest planCreateRequest) {
+        this.nation = planCreateRequest.getNation();
+        this.city = planCreateRequest.getCity();
+        this.detail = planCreateRequest.getDetail();
+        this.latitude = planCreateRequest.getLatitude();
+        this.longitude = planCreateRequest.getLongitude();
+    }
 }

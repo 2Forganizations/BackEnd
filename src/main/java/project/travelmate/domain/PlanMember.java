@@ -28,4 +28,13 @@ public class PlanMember {
     @JoinColumn(name = "user_id")
     private User user;
 
+    public PlanMember(Role role, Plan plan, User user) {
+        this.role = role;
+        this.plan = plan;
+        this.user = user;
+    }
+
+    public static PlanMember ofOwner(Plan plan, User user) {
+        return new PlanMember(Role.OWNER, plan, user);
+    }
 }
