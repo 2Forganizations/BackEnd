@@ -1,4 +1,4 @@
-package project.travelmate.response;
+package project.travelmate.response.plan;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

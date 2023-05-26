@@ -22,7 +22,7 @@ import project.travelmate.WithMockCustomUser;
 import project.travelmate.config.security.SecurityConfig;
 import project.travelmate.domain.enums.Category;
 import project.travelmate.request.PlanCreateRequest;
-import project.travelmate.response.PlanCreateResponse;
+import project.travelmate.response.plan.PlanCreateResponse;
 import project.travelmate.service.PlanService;
 
 import java.time.LocalDateTime;
