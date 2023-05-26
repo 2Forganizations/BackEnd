@@ -1,7 +1,9 @@
 package project.travelmate.dummy;
 
 import project.travelmate.domain.Plan;
+import project.travelmate.domain.User;
 import project.travelmate.domain.enums.Category;
+import project.travelmate.domain.enums.Gender;
 import project.travelmate.request.PlanCreateRequest;
 
 import java.time.LocalDateTime;
@@ -16,5 +18,11 @@ public class DummyObjects {
 
     public static Plan makeDummyPlan() {
         return Plan.createPlan(makePlanRequest(), "ownerId");
+    }
+
+    public static User makeDummyUser() {
+        return User.builder()
+                .id("user_id").email("email").name("user1").gender(Gender.MALE).intro("intro")
+                .build();
     }
 }

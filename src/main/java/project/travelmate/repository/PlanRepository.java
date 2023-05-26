@@ -21,4 +21,6 @@ public interface PlanRepository extends JpaRepository<Plan, Long> {
     @Query("select p from Plan p join fetch p.planMembers pl join fetch pl.user where p.id=:planId and pl.role='OWNER'")
     Optional<Plan> findPlanByPlanId(@Param("planId") Long planId);
 
+    @Query("select p from Plan p left join fetch p.planMembers where p.id=:planId")
+    Optional<Plan> findPlanWithPlanMembersAndWaitMembersById(@Param("planId") Long planId);
 }

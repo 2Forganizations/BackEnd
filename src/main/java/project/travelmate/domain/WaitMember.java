@@ -25,4 +25,8 @@ public class WaitMember extends CreatedEntity {
     @JoinColumn(name = "user_id")
     private User user;
 
+    public WaitMember(Plan plan, User user) {
+        this.plan = plan;
+        this.user = user;
+    }
 }
