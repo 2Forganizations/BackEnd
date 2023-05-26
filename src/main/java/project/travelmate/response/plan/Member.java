@@ -4,6 +4,7 @@ import lombok.Getter;
 import project.travelmate.domain.PlanMember;
 import project.travelmate.domain.ProfileImage;
 import project.travelmate.domain.User;
+import project.travelmate.domain.enums.Role;
 
 import java.util.List;
 import java.util.Optional;
@@ -14,9 +15,11 @@ public class Member {
     private String memberId;
     private String username;
     private String profileImage;
+    private Role role;
 
     public Member(PlanMember planMember) {
         User user = planMember.getUser();
+        this.role = planMember.getRole();
         this.memberId = user.getId();
         this.username = user.getName();
         this.profileImage = Optional.ofNullable(user.getProfileImage())
