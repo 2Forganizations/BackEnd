@@ -43,9 +43,17 @@ public class PlanController {
     public ResponseEntity<Slice<CardPlanResponse>> getPlanList(
             @PageableDefault(sort = "id", direction = Sort.Direction.DESC) Pageable pageable
     ) {
-        Slice<CardPlanResponse> planListResponse= planService.getPlanList(pageable);
+        Slice<CardPlanResponse> planListResponse = planService.getPlanList(pageable);
 
         return ResponseEntity.ok(planListResponse);
     }
 
+    @PostMapping("/api/{planId}/delete")
+    public ResponseEntity<Void> deletePlan(
+            @AuthenticationPrincipal AuthInfo authInfo,
+            @PathVariable("planId") Long planId
+    ) {
+        planService.deletePlan(authInfo.getId(), planId);
+        return ResponseEntity.ok(null);
+    }
 }

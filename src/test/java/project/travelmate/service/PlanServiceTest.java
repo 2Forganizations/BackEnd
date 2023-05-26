@@ -12,6 +12,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
 import org.springframework.data.domain.SliceImpl;
+import project.travelmate.advice.exception.NotOwnerException;
 import project.travelmate.advice.exception.PlanNotFoundException;
 import project.travelmate.domain.Plan;
 import project.travelmate.repository.PlanRepository;
@@ -118,10 +119,39 @@ class PlanServiceTest {
 
             assertThat(content.size()).isEqualTo(3);
         }
-
-
     }
 
 
+    @Nested
+    class DeletePlan {
+        @Test
+        public void 성공() {
+            Plan plan = makeDummyPlan();
+            Mockito.when(planRepository.findPlanByPlanId(ArgumentMatchers.anyLong()))
+                    .thenReturn(Optional.of(plan));
+
+            planService.deletePlan("ownerId", 10L);
+        }
+
+        @Test
+        public void plan_owner가_아닐때() {
+            Plan plan = makeDummyPlan();
+            Mockito.when(planRepository.findPlanByPlanId(ArgumentMatchers.anyLong()))
+                    .thenReturn(Optional.of(plan));
+
+            assertThatThrownBy(() -> planService.deletePlan("memberId", 10L))
+                    .isInstanceOf(NotOwnerException.class);
+        }
+
+        @Test
+        public void plan이_없을때() {
+            Plan plan = makeDummyPlan();
+            Mockito.when(planRepository.findPlanByPlanId(ArgumentMatchers.anyLong()))
+                    .thenReturn(Optional.empty());
+
+            assertThatThrownBy(() -> planService.deletePlan("memberId", 10L))
+                    .isInstanceOf(PlanNotFoundException.class);
+        }
+    }
 
 }
