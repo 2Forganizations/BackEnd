@@ -13,7 +13,9 @@ public enum ExceptionCodeConst {
     EMPTY_FILE_CODE("EMPTY_FILE", "비어있는 파일이 들어왔습니다."),
     NOT_IMAGE_CONTENT_CODE("NOT_IMAGE_CONTENT_TYPE", "content-type이 이미지 형식이 아닙니다."),
     IO_EXCEPTION_CODE("IO_EXCEPTION", "IO_EXCEPTION"),
-    NOT_OWNER_CODE("AUTHORITY_EXCEPTION", "접근 권한이 부족합니다.");
+    NOT_OWNER_CODE("AUTHORITY_EXCEPTION", "접근 권한이 부족합니다."),
+    AUTHORITY_EXCEPTION_CODE("AUTHORITY_EXCEPTION", "해당 권한이 아닙니다."),
+    DUPLICATE_REQUEST_EXCEPTION_CODE("DUPLICATE_REQUEST_EXCEPTION", "중복된 요청입니다.");
 
     private final String code;
     private final String message;
