@@ -1,22 +1,36 @@
 package project.travelmate.repository;
 
+import com.querydsl.jpa.impl.JPAQueryFactory;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.mockito.InjectMocks;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Import;
 import project.travelmate.advice.exception.UserNotFoundException;
 import project.travelmate.domain.ProfileImage;
 import project.travelmate.domain.User;
 import project.travelmate.domain.enums.Gender;
 
+import javax.persistence.EntityManager;
+
 import static org.assertj.core.api.Assertions.assertThat;
 
 @DataJpaTest
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
+@Import(TestConfig.class)
 class UserRepositoryTest {
 
     @Autowired UserRepository userRepository;
+
+    @Autowired
+    EntityManager em;
+
+    @InjectMocks
+    JPAQueryFactory queryFactory;
 
 
     @Test

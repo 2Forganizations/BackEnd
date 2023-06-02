@@ -1,6 +1,7 @@
 package project.travelmate.service;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Service;
@@ -11,6 +12,7 @@ import project.travelmate.domain.Plan;
 import project.travelmate.repository.PlanRepository;
 import project.travelmate.repository.UserRepository;
 import project.travelmate.request.PlanCreateRequest;
+import project.travelmate.request.PlanSearchRequest;
 import project.travelmate.response.plan.CardPlanResponse;
 import project.travelmate.response.plan.PlanCreateResponse;
 import project.travelmate.response.plan.PlanDetailResponse;
@@ -38,8 +40,9 @@ public class PlanService {
         return new PlanDetailResponse(plan);
     }
 
-    public Slice<CardPlanResponse> getPlanList(Pageable pageable) {
-        return planRepository.findPlansWithPlanOwner(pageable).map(CardPlanResponse::new);
+    public Page<CardPlanResponse> getPlanList(PlanSearchRequest planSearchRequest, Pageable pageable) {
+        Page<CardPlanResponse> search = planRepository.search(planSearchRequest, pageable);
+        return search;
 
     }
 
