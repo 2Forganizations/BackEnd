@@ -1,6 +1,7 @@
 package project.travelmate.controller;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
 import org.springframework.data.domain.Sort;
@@ -10,6 +11,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import project.travelmate.request.AuthInfo;
 import project.travelmate.request.PlanCreateRequest;
+import project.travelmate.request.PlanSearchRequest;
 import project.travelmate.response.plan.CardPlanResponse;
 import project.travelmate.response.plan.PlanCreateResponse;
 import project.travelmate.response.plan.PlanDetailResponse;
@@ -40,10 +42,11 @@ public class PlanController {
     }
 
     @GetMapping("/api/plans/get")
-    public ResponseEntity<Slice<CardPlanResponse>> getPlanList(
-            @PageableDefault(sort = "id", direction = Sort.Direction.DESC) Pageable pageable
+    public ResponseEntity<Page<CardPlanResponse>> getPlanList(
+            @PageableDefault(sort = "id", direction = Sort.Direction.DESC) Pageable pageable,
+            @RequestBody PlanSearchRequest planSearchRequest
     ) {
-        Slice<CardPlanResponse> planListResponse = planService.getPlanList(pageable);
+        Page<CardPlanResponse> planListResponse = planService.getPlanList(planSearchRequest, pageable);
 
         return ResponseEntity.ok(planListResponse);
     }

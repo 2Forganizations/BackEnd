@@ -1,7 +1,14 @@
+buildscript {
+	ext {
+		queryDslVersion = "5.0.0"
+	}
+}
+
 plugins {
 	id 'java'
 	id 'org.springframework.boot' version '2.7.10'
 	id 'io.spring.dependency-management' version '1.0.15.RELEASE'
+	id "com.ewerk.gradle.plugins.querydsl" version "1.0.10"
 }
 
 group = 'project'
@@ -27,6 +34,9 @@ dependencies {
 	implementation 'io.jsonwebtoken:jjwt-api:0.11.2'
 	implementation 'com.auth0:java-jwt:3.13.0'
 //
+	implementation "com.querydsl:querydsl-jpa:${queryDslVersion}"
+	implementation "com.querydsl:querydsl-apt:${queryDslVersion}"
+//
 	runtimeOnly 'com.mysql:mysql-connector-j'
 	implementation 'org.springframework.boot:spring-boot-starter-jdbc'
 	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
@@ -42,4 +52,26 @@ dependencies {
 
 tasks.named('test') {
 	useJUnitPlatform()
+}
+
+def querydslDir = "$buildDir/generated/querydsl"
+
+querydsl { //이놈
+	jpa = true
+	querydslSourcesDir = querydslDir
+}
+
+sourceSets { //이놈
+	main.java.srcDir querydslDir
+}
+
+configurations { // 이놈
+//	compileOnly {
+//		extendsFrom annotationProcessor
+//	}
+	querydsl.extendsFrom compileClasspath
+}
+
+compileQuerydsl { // 이놈
+	options.annotationProcessorPath = configurations.querydsl
 }

@@ -11,7 +11,7 @@ import project.travelmate.domain.Plan;
 import java.util.Optional;
 
 @Repository
-public interface PlanRepository extends JpaRepository<Plan, Long> {
+public interface PlanRepository extends JpaRepository<Plan, Long>, PlanCustomRepository{
     @Query("select p from Plan p join fetch p.planMembers pl join fetch pl.user where p.id=:planId")
     Optional<Plan> findPlanWithPlanMembersById(@Param("planId") Long planId);
 

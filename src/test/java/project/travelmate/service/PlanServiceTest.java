@@ -9,14 +9,13 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Slice;
-import org.springframework.data.domain.SliceImpl;
+import org.springframework.data.domain.*;
 import project.travelmate.advice.exception.NotOwnerException;
 import project.travelmate.advice.exception.PlanNotFoundException;
 import project.travelmate.domain.Plan;
 import project.travelmate.repository.PlanRepository;
 import project.travelmate.request.PlanCreateRequest;
+import project.travelmate.request.PlanSearchRequest;
 import project.travelmate.response.plan.CardPlanResponse;
 import project.travelmate.response.plan.PlanCreateResponse;
 import project.travelmate.response.plan.PlanDetailResponse;
@@ -98,10 +97,10 @@ class PlanServiceTest {
     class getPlanList {
         @Test
         public void plan이_없을때() {
-            Mockito.when(planRepository.findPlansWithPlanOwner(ArgumentMatchers.any(Pageable.class)))
-                    .thenReturn(new SliceImpl<Plan>(List.of()));
+            Mockito.when(planRepository.search(ArgumentMatchers.any(PlanSearchRequest.class), ArgumentMatchers.any(Pageable.class)))
+                    .thenReturn(new PageImpl<CardPlanResponse>(List.of()));
 
-            Slice<CardPlanResponse> planList = planService.getPlanList(Pageable.ofSize(3));
+            Page<CardPlanResponse> planList = planService.getPlanList(new PlanSearchRequest(), Pageable.ofSize(3));
 
             assertThat(planList.getContent().size()).isEqualTo(0);
         }
@@ -111,10 +110,10 @@ class PlanServiceTest {
             Plan plan1 = makeDummyPlan();
             Plan plan2 = makeDummyPlan();
             Plan plan3 = makeDummyPlan();
-            Mockito.when(planRepository.findPlansWithPlanOwner(ArgumentMatchers.any(Pageable.class)))
-                    .thenReturn(new SliceImpl<Plan>(List.of(plan1, plan2, plan3)));
+            Mockito.when(planRepository.search(ArgumentMatchers.any(PlanSearchRequest.class), ArgumentMatchers.any(Pageable.class)))
+                    .thenReturn(new PageImpl<CardPlanResponse>(List.of(new CardPlanResponse(plan1), new CardPlanResponse(plan2), new CardPlanResponse(plan3))));
 
-            Slice<CardPlanResponse> planList = planService.getPlanList(Pageable.ofSize(2));
+            Page<CardPlanResponse> planList = planService.getPlanList(new PlanSearchRequest(), Pageable.ofSize(2));
             List<CardPlanResponse> content = planList.getContent();
 
             assertThat(content.size()).isEqualTo(3);
