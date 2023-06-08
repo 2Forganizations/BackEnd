@@ -44,7 +44,7 @@ public class PlanController {
     @GetMapping("/api/plans/get")
     public ResponseEntity<Page<CardPlanResponse>> getPlanList(
             @PageableDefault(sort = "id", direction = Sort.Direction.DESC) Pageable pageable,
-            @RequestBody PlanSearchRequest planSearchRequest
+            @ModelAttribute PlanSearchRequest planSearchRequest
     ) {
         Page<CardPlanResponse> planListResponse = planService.getPlanList(planSearchRequest, pageable);
 
