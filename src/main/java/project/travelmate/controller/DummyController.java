@@ -65,7 +65,7 @@ public class DummyController {
         PlanCreateRequest planCreateRequest2 = new PlanCreateRequest("여행 가실분", "이야기......", Category.TOUR, LocalDateTime.now(), LocalDateTime.now(),
                 30, 40, "대한민국", "서울", "도로명...", "37.715133.", "126.734086", 0, 2, 0);
         PlanCreateRequest planCreateRequest3 = new PlanCreateRequest("식사 하실분", "이야기......", Category.EAT, LocalDateTime.now(), LocalDateTime.now(),
-                50, 50, "대한민국", "서울", "도로명...", "37.715133.", "126.734086", 1, 2, 3);
+                50, 50, "대한민국", "서울", "도로명...", "37.715133.", "126.734086", 0, 0, 3);
         Plan plan1 = Plan.createPlan(planCreateRequest1, "9999");
         Plan plan2 = Plan.createPlan(planCreateRequest2, "10000");
         Plan plan3 = Plan.createPlan(planCreateRequest3, "10001");
