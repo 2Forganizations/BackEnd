@@ -12,6 +12,7 @@ import project.travelmate.domain.PlanMember;
 import project.travelmate.domain.User;
 import project.travelmate.domain.WaitMember;
 import project.travelmate.domain.enums.Role;
+import project.travelmate.repository.PlanMemberRepository;
 import project.travelmate.repository.UserRepository;
 import project.travelmate.repository.WaitMemberRepository;
 import project.travelmate.repository.PlanRepository;
@@ -24,6 +25,7 @@ public class MatchService {
     private final PlanRepository planRepository;
     private final UserRepository userRepository;
     private final WaitMemberRepository waitMemberRepository;
+    private final PlanMemberRepository planMemberRepository;
 
     @Transactional
     public void createWaitMember(String memberId, Long planId) {
@@ -52,6 +54,26 @@ public class MatchService {
         waitMemberRepository.deleteById(waitMemberId);
     }
 
+    @Transactional
+    public void deleteWaitMember(String memberId, Long waitMemberId) {
+        WaitMember waitMember = waitMemberRepository.findById(waitMemberId)
+                .orElseThrow(() -> new UserNotFoundException());
+        Plan plan = waitMember.getPlan();
+        isOwner(plan, memberId);
+
+        waitMemberRepository.deleteById(waitMemberId);
+    }
+
+    @Transactional
+    public void banMember(String memberId, Long planMemberId) {
+        PlanMember planMember = planMemberRepository.findById(planMemberId)
+                .orElseThrow(() -> new UserNotFoundException());
+        Plan plan = planMember.getPlan();
+        isOwner(plan, memberId);
+
+        planMemberRepository.deleteById(planMemberId);
+    }
+
     private void isWaitMember(Plan plan, String memberId) {
         for (WaitMember waitMember : plan.getWaitMembers()) {
             if (memberId.equals(waitMember.getUser().getId())) {
@@ -67,6 +89,7 @@ public class MatchService {
             }
         }
     }
+
 
 
 }

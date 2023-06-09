@@ -26,13 +26,33 @@ public class MatchController {
         return ResponseEntity.ok(null);
     }
 
-    @PostMapping("/api/plan/member/create")
-    public ResponseEntity<Void> acceptMember(
+    @PostMapping("/api/plan/member/create/{waitMemberId}")
+    public ResponseEntity<Void> acceptWaitMember(
             @AuthenticationPrincipal AuthInfo authInfo,
-            @RequestParam("waitmemberid") Long waitMemberId
+            @PathVariable("waitMemberId") Long waitMemberId
     ) {
 
         matchService.acceptWaitMember(authInfo.getId(), waitMemberId);
+        return ResponseEntity.ok(null);
+    }
+
+    @PostMapping("/api/plan/waitmember/delete/{waitMemberId}")
+    public ResponseEntity<Void> deleteWaitMember(
+            @AuthenticationPrincipal AuthInfo authInfo,
+            @PathVariable("waitMemberId") Long waitMemberId
+    ) {
+
+        matchService.deleteWaitMember(authInfo.getId(), waitMemberId);
+        return ResponseEntity.ok(null);
+    }
+
+    @PostMapping("/api/plan/member/delete/{planMemberId}")
+    public ResponseEntity<Void> banMember(
+            @AuthenticationPrincipal AuthInfo authInfo,
+            @PathVariable("planMemberId") Long planMemberId
+    ) {
+
+        matchService.banMember(authInfo.getId(), planMemberId);
         return ResponseEntity.ok(null);
     }
 
