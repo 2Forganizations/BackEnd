@@ -17,6 +17,7 @@ public class DefaultExceptionHandler {
     @ExceptionHandler(InvalidFormatException.class)
     @ResponseBody
     public ResponseEntity<String> handle(Exception e) {
+        log.info("InvalidFormatException error");
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
     }
 }

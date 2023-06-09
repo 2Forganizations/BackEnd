@@ -25,6 +25,7 @@ public class MatchService {
     private final UserRepository userRepository;
     private final WaitMemberRepository waitMemberRepository;
 
+    @Transactional
     public void createWaitMember(String memberId, Long planId) {
         Plan plan = planRepository.findPlanWithPlanMembersAndWaitMembersById(planId)
                 .orElseThrow(() -> new PlanNotFoundException());
@@ -36,6 +37,19 @@ public class MatchService {
 
         WaitMember waitMember = new WaitMember(plan, user);
         waitMemberRepository.save(waitMember);
+    }
+
+    @Transactional
+    public void acceptWaitMember(String memberId, Long waitMemberId) {
+        WaitMember waitMember = waitMemberRepository.findById(waitMemberId)
+                .orElseThrow(() -> new UserNotFoundException());
+        Plan plan = waitMember.getPlan();
+        isOwner(plan, memberId);
+
+        PlanMember planMember = new PlanMember(Role.MEMBER, plan, waitMember.getUser());
+        plan.getPlanMembers().add(planMember);
+
+        waitMemberRepository.deleteById(waitMemberId);
     }
 
     private void isWaitMember(Plan plan, String memberId) {
@@ -53,4 +67,6 @@ public class MatchService {
             }
         }
     }
+
+
 }

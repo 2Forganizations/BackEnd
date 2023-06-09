@@ -17,6 +17,7 @@ public class AuthExceptionHandler extends ResponseEntityExceptionHandler {
     @ExceptionHandler({ AuthenticationException.class })
     @ResponseBody
     public ResponseEntity<String> handleAuthenticationException(Exception ex) {
+        log.info("AuthenticationException error");
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(ex.getMessage());
     }
 

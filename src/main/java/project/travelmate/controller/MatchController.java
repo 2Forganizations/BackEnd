@@ -5,6 +5,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import project.travelmate.request.AuthInfo;
 import project.travelmate.service.MatchService;
@@ -24,5 +25,16 @@ public class MatchController {
 
         return ResponseEntity.ok(null);
     }
+
+    @PostMapping("/api/plan/member/create")
+    public ResponseEntity<Void> acceptMember(
+            @AuthenticationPrincipal AuthInfo authInfo,
+            @RequestParam("waitmemberid") Long waitMemberId
+    ) {
+
+        matchService.acceptWaitMember(authInfo.getId(), waitMemberId);
+        return ResponseEntity.ok(null);
+    }
+
 
 }
