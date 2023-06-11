@@ -63,7 +63,11 @@ public class KakaoRequestService implements RequestService {
         String refreshToken = jwtUtil.createRefreshToken(kakaoUserInfo.getId());
 
         Optional<User> findUser = userRepository.findById(valueOf(kakaoUserInfo.getId()));
+
+        boolean isFirst = false;
         if (findUser.isEmpty()) {
+            isFirst = true;
+
             ProfileImage profileImage = ProfileImage.builder().filePath(null).build();
             User user = User.builder()
                     .id(kakaoUserInfo.getId())
@@ -82,7 +86,7 @@ public class KakaoRequestService implements RequestService {
             refreshTokenRepository.save(token);
         }
 
-        return new SignInResponse(AuthProvider.KAKAO, kakaoUserInfo, accessToken, refreshToken);
+        return new SignInResponse(AuthProvider.KAKAO, kakaoUserInfo, accessToken, refreshToken, isFirst);
     }
 
     @Override
