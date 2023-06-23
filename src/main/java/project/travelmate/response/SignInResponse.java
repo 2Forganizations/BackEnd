@@ -13,12 +13,13 @@ public class SignInResponse {
     private KakaoUserInfo kakaoUserInfo;
     private String accessToken;
     private String refreshToken;
+    private boolean isFirst;
 
-    public SignInResponse(AuthProvider authProvider, KakaoUserInfo kakaoUserInfo, String accessToken, String refreshToken) {
+    public SignInResponse(AuthProvider authProvider, KakaoUserInfo kakaoUserInfo, String accessToken, String refreshToken, boolean isFirst) {
         this.authProvider = authProvider;
         this.kakaoUserInfo = kakaoUserInfo;
         this.accessToken = accessToken;
         this.refreshToken = refreshToken;
+        this.isFirst = isFirst;
     }
-
 }

@@ -32,7 +32,7 @@ public class PlanController {
         return ResponseEntity.ok(plan);
     }
 
-    @GetMapping("/api/{planId}/get")
+    @GetMapping("/api/plan/{planId}/get")
     public ResponseEntity<PlanDetailResponse> getPlan(
             @PathVariable("planId") Long planId
     ) {
@@ -51,7 +51,7 @@ public class PlanController {
         return ResponseEntity.ok(planListResponse);
     }
 
-    @PostMapping("/api/{planId}/delete")
+    @PostMapping("/api/plan/{planId}/delete")
     public ResponseEntity<Void> deletePlan(
             @AuthenticationPrincipal AuthInfo authInfo,
             @PathVariable("planId") Long planId

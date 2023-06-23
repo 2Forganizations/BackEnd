@@ -12,6 +12,7 @@ import project.travelmate.domain.PlanMember;
 import project.travelmate.domain.User;
 import project.travelmate.domain.WaitMember;
 import project.travelmate.domain.enums.Role;
+import project.travelmate.repository.PlanMemberRepository;
 import project.travelmate.repository.UserRepository;
 import project.travelmate.repository.WaitMemberRepository;
 import project.travelmate.repository.PlanRepository;
@@ -24,7 +25,9 @@ public class MatchService {
     private final PlanRepository planRepository;
     private final UserRepository userRepository;
     private final WaitMemberRepository waitMemberRepository;
+    private final PlanMemberRepository planMemberRepository;
 
+    @Transactional
     public void createWaitMember(String memberId, Long planId) {
         Plan plan = planRepository.findPlanWithPlanMembersAndWaitMembersById(planId)
                 .orElseThrow(() -> new PlanNotFoundException());
@@ -36,6 +39,39 @@ public class MatchService {
 
         WaitMember waitMember = new WaitMember(plan, user);
         waitMemberRepository.save(waitMember);
+    }
+
+    @Transactional
+    public void acceptWaitMember(String memberId, Long waitMemberId) {
+        WaitMember waitMember = waitMemberRepository.findById(waitMemberId)
+                .orElseThrow(() -> new UserNotFoundException());
+        Plan plan = waitMember.getPlan();
+        isOwner(plan, memberId);
+
+        PlanMember planMember = new PlanMember(Role.MEMBER, plan, waitMember.getUser());
+        plan.getPlanMembers().add(planMember);
+
+        waitMemberRepository.deleteById(waitMemberId);
+    }
+
+    @Transactional
+    public void deleteWaitMember(String memberId, Long waitMemberId) {
+        WaitMember waitMember = waitMemberRepository.findById(waitMemberId)
+                .orElseThrow(() -> new UserNotFoundException());
+        Plan plan = waitMember.getPlan();
+        isOwner(plan, memberId);
+
+        waitMemberRepository.deleteById(waitMemberId);
+    }
+
+    @Transactional
+    public void banMember(String memberId, Long planMemberId) {
+        PlanMember planMember = planMemberRepository.findById(planMemberId)
+                .orElseThrow(() -> new UserNotFoundException());
+        Plan plan = planMember.getPlan();
+        isOwner(plan, memberId);
+
+        planMemberRepository.deleteById(planMemberId);
     }
 
     private void isWaitMember(Plan plan, String memberId) {
@@ -53,4 +89,7 @@ public class MatchService {
             }
         }
     }
+
+
+
 }
